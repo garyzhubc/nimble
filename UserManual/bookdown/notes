@@ -1,0 +1,5 @@
+for tables, use
+pandoc file.tex -o file.md
+
+for density table with two-line rows, see research/perry/bookdown-table-demo.Rmd
+
