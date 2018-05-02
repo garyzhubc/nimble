@@ -1,6 +1,15 @@
 for tables, use
 pandoc file.tex -o file.md
 
+(still need to go back to this and fix)
 for density table with two-line rows, see research/perry/bookdown-table-demo.Rmd
+
+# footnotes?
+
+# line breaks in href and <<>>=@ - see notes from 243 on \n in str_replace
+
+# parts?
+
+need to deal with \citet in addition to citep
 
 bookdown::render_book('index.Rmd', output_format='pdf_document')

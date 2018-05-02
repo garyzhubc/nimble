@@ -12,7 +12,7 @@
 #' @import stringr
 #' 
 
-latex2Rmd <- function(input, output) {
+latex2Rmd <- function(input, output, save = TRUE) {
     text <- readChar(input, file.info(input)$size)
     
     text <- str_replace_all(string = text, pattern = '<<(.*?)>>=(.*?)@', replacement = '```{r, \\1}\\2```')
@@ -22,20 +22,24 @@ latex2Rmd <- function(input, output) {
     text <- str_replace_all(string = text, pattern = '\\\\url\\{(.*?)\\}', replacement = '[\\1]')
     text <- str_replace_all(string = text, pattern = '\\\\code\\{(.*?)\\}', replacement = '`\\1`')
     text <- str_replace_all(string = text, pattern = '\\\\texttt\\{(.*?)\\}', replacement = '`\\1`')
-    text <- str_replace_all(string = text, pattern = '\\\\emph\\{(.*?)\\}', replacement = '*\\1*')
+    text <- str_replace_all(string = text, pattern = '\\\\(emph|nm)\\{(.*?)\\}', replacement = '*\\2*')
     text <- str_replace_all(string = text, pattern = '\\\\textit\\{(.*?)\\}', replacement = '*\\1*')
+   
+    text <- str_replace_all(string = text, pattern = '\\\\chapter\\*?\\{(.*?)\\}', replacement = '# \\1') 
+    text <- str_replace_all(string = text, pattern = '\\\\section\\*?\\{(.*?)\\}', replacement = '## \\1')
+    text <- str_replace_all(string = text, pattern = '\\\\subsection\\*?\\{(.*?)\\}', replacement = '### \\1')
+    text <- str_replace_all(string = text, pattern = '\\\\subsubsection\\*?\\{(.*?)\\}', replacement = '#### \\1')
     
-    text <- str_replace_all(string = text, pattern = '\\\\section\\*?\\{(.*?)\\}', replacement = '# \\1')
-    text <- str_replace_all(string = text, pattern = '\\\\subsection\\*?\\{(.*?)\\}', replacement = '## \\1')
-    text <- str_replace_all(string = text, pattern = '\\\\subsubsection\\*?\\{(.*?)\\}', replacement = '### \\1')
+    text <- str_replace_all(string = text, pattern = '\\\\label\\*?\\{(.*?)\\}', replacement = '\\{#\\1\\}')
+    text <- str_replace_all(string = text, pattern = '\\\\ref\\*?\\{(.*?)\\}', replacement = '@ref\\(\\1\\)')
     
-    
+    text <- str_replace_all(string = text, pattern = '\\\\cd\\*?\\{(.*?)\\}', replacement = '`\\1`') 
     text <- str_replace_all(string = text, pattern = '\\\\begin\\{(.*?)\\}', replacement = '')
     text <- str_replace_all(string = text, pattern = '\\\\end\\{(.*?)\\}', replacement = '')
-    text <- str_replace_all(string = text, pattern = '\\\\item', replacement = '*')
+    text <- str_replace_all(string = text, pattern = '\\\\item', replacement = '  *')
     
     text <- str_replace_all(string = text, pattern = '\\\r', replacement = '')
-    
-    
-    writeLines(text, output, sep = '')
+
+    text <- str_replace_all(string = text, pattern = '\\\\citep\\*?\\{(.*?)\\}', replacement = '[@\\1]') 
+    if(save)  writeLines(text, output, sep = '')
 }

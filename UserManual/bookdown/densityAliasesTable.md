@@ -1,3 +1,6 @@
+Distributions with alternative names (aliases)
+label="table:distributions-aliases"
+
   Distribution        Canonical name   Alias
   ------------------- ---------------- -----------
   Binomial            dbin             dbinom
@@ -7,8 +10,4 @@
   Negative binomial   dnegbin          dnbinom
   Weibull             dweib            dweibull
   Wishart             dwish            dwishart
-
-  : Distributions with alternative names (aliases).<span
-  data-label="table:distributions-aliases"></span>
-
 
