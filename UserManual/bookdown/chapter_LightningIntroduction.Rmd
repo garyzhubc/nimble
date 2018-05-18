@@ -1,28 +1,25 @@
-%% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr
-
-\Sexpr{set_parent('NimbleUserManual.Rnw')}
 
 
-<<chunk-LIinit, echo = FALSE>>=
+
+
+```{r, chunk-LIinit, echo = FALSE}
 ## source the code
 read_chunk(file.path('chunks', 'introExample_chunks.R'))  # one can put code chunks here if one wants
-@ 
+``` 
 
 
-# Lightning introduction
-{#cha:intro}
+# Lightning introduction {#cha:intro}
 
-## A brief example
-{#sec:brief-example}
+## A brief example {#sec:brief-example}
 
 Here we'll give a simple example of building a model and running some algorithms on the model, as well as creating our own user-specified algorithm. The goal is to give you a sense for what one can do in the system. Later sections will provide more detail.
 
-We'll use the *pump* model example from BUGS\footnote{The data set
-  describes failure rates of some pumps.}.  We could load the model
+We'll use the *pump* model example from BUGS [The data set
+  describes failure rates of some pumps.].  We could load the model
 from the standard BUGS example file formats (Section @ref(sec:readBUGSmodel)), but instead we'll show
 how to enter it directly in R.
 
-In this ``lightning introduction'' we will:
+In this 'lightning introduction' we will:
 
 
   * Create the model for the pump example.
@@ -38,25 +35,24 @@ In this ``lightning introduction'' we will:
 
 
 
-## Creating a model
-{#sec:creating-model}
+## Creating a model {#sec:creating-model}
 First we define the model code, its constants, data, and initial
 values for MCMC.
 
-<<inputPump>>=
-@ 
+```{r, inputPump}
+``` 
 
 Here `x[i]` is the number of failures recorded during a time
 duration of length `t[i]` for the `i`$^{th}$ pump.
 `theta[i]` is a failure rate, and the goal is estimate parameters
 `alpha` and `beta`.  Now let's create the model and look at some of its nodes.
 
-<<explorePump>>=
-@ 
+```{r, explorePump}
+``` 
 
 
 Notice that in the list of nodes, NIMBLE has introduced a new node,
-`lifted\_d1\_over\_beta`. We call this a ``lifted'' node. Like R,
+`lifted_d1_over_beta`. We call this a 'lifted' node. Like R,
 NIMBLE allows alternative parameterizations, such as the scale or rate
 parameterization of the gamma distribution. Choice of parameterization
 can generate a lifted node, as can using a link function or a
@@ -67,8 +63,8 @@ Thanks to the plotting capabilities of the `igraph` package that
 NIMBLE uses to represent the directed acyclic graph, we can plot the
 model  (Figure 2.1).
 
-<<plotPump, fig.cap="Directed Acyclic Graph plot of the pump model, thanks to the igraph package">>=
-@ 
+```{r, plotPump, fig.cap="Directed Acyclic Graph plot of the pump model, thanks to the igraph package"}
+``` 
 
 You are in control of the model.  By default, `nimbleModel` does
 its best to initialize a model, but let's say you want to
@@ -84,23 +80,21 @@ model are up to date.  First we show how
 to use the model's `getDependencies` method to query information
 about its graph.
 
-% TODO: the logic here is a bit weird - we say we want to know all parents of theta are initialized by our code actually finds dependencies of alpha+beta not parents of theta
 
-<<manipPump>>=
+```{r, manipPump}
 "
-@ 
+``` 
 
 Notice that the first `getDependencies` call returned dependencies
 from `alpha` and `beta` down to the next stochastic nodes in the
 model.  The second call requested only deterministic dependencies.
-The call to `pump\$simulate("theta")`
+The call to `pump$simulate("theta")`
 expands `"theta"` to include all nodes in `theta`.  After
 simulating into `theta`, we can see that `lambda` and the log
 probabilities of `x` still reflect the old values of `theta`, so
 we `calculate` them and then see that they have been updated.
 
-## Compiling the model
-{#sec:compiling-model}
+## Compiling the model {#sec:compiling-model}
 
 Next we compile the model, which means generating C++ code, compiling
 that code, and loading it back into R with an object that can be used just
@@ -109,13 +103,12 @@ initialized from those of the original model in R, but
 the original and compiled models are distinct objects so any
 subsequent changes in one will not be reflected in the other.
 
-<<compilePump>>=
-@ 
+```{r, compilePump}
+``` 
 
 Note that the compiled model is used when running any NIMBLE algorithms via C++, so the model needs to be compiled before (or at the same time as) any compilation of algorithms, such as the compilation of the MCMC done in the next section.
 
-## One-line invocation of MCMC
-{#sec:intro-runMCMC}
+## One-line invocation of MCMC {#sec:intro-runMCMC}
 
 The most direct approach to invoking NIMBLE's MCMC engine is using the
 `nimbleMCMC` function.  This function would generally take the code,
@@ -128,40 +121,35 @@ and/or WAIC values.
 For example, to execute two MCMC chains of 10,000 samples each, and
 return samples, summary statistics, and WAIC values:
 
-<<nimbleMCMCpump>>=
-@ 
+```{r, nimbleMCMCpump}
+``` 
 
 See Section @ref(sec:nimbleMCMC) or `help(nimbleMCMC)` for more
 details about using `nimbleMCMC`.
 
 
-## Creating, compiling and running a basic MCMC configuration
-{#sec:creating-mcmc}
+## Creating, compiling and running a basic MCMC configuration {#sec:creating-mcmc}
   
 At this point we have initial values for all of the nodes in the model,
 and we have both the original and compiled versions of the model. As a first algorithm
 to try on our model, let's use NIMBLE's default MCMC. Note that conjugate relationships are detected for all nodes except for
 `alpha`, on which the default sampler is a random walk Metropolis sampler.
-%\footnote{We haven't set up conjugate relationships for an
-%  exponential yet.}
-% footnote is true but not relevant as there is not a conj relationship for alpha in a gamma-distributed dependency
 
-<<mcmcPump, fig.height=2.5>>=
-@ 
+```{r, mcmcPump, fig.height=2.5}
+``` 
 
 Notice the posterior correlation between `alpha` and `beta`.
 A measure of the mixing for each is the 
 autocorrelation for each parameter, shown by the `acf` plots. 
 
-## Customizing the MCMC
-{#sec:customizing-mcmc}
+## Customizing the MCMC {#sec:customizing-mcmc}
 
 Let's add an adaptive
 block sampler on `alpha` and `beta` jointly and see if that
 improves the mixing. 
 
-<<mcmcPump2, fig.height=2.5>>=
-@ 
+```{r, mcmcPump2, fig.height=2.5}
+``` 
 
 We can see that the block sampler has decreased the 
 autocorrelation for both `alpha` and `beta`.  Of course these
@@ -172,25 +160,19 @@ the point of this example.
 Once you learn the MCMC system, you can write your own samplers and
 include them.  The entire system is written in nimbleFunctions.
 
-## Running MCEM
-{#sec:running-mcem}
+## Running MCEM {#sec:running-mcem}
 
-NIMBLE is a system for working with algorithms, not just an MCMC engine. So let's try maximizing the marginal likelihood for `alpha` and `beta` using Monte Carlo Expectation Maximization\footnote{Note that for this model, one could analytically integrate over `theta` and then numerically maximize the resulting marginal likelihood.}. 
+NIMBLE is a system for working with algorithms, not just an MCMC engine. So let's try maximizing the marginal likelihood for `alpha` and `beta` using Monte Carlo Expectation Maximization [Note that for this model, one could analytically integrate over `theta` and then numerically maximize the resulting marginal likelihood.]. 
 
-<<mcemPump, eval = runMCEMs, echo = runMCEMs>>=
-@ 
-<<dont-run-mcemPump, eval = !runMCEMs, echo = !runMCEMs>>=
-@ 
+```{r, mcemPump, eval = runMCEMs, echo = runMCEMs}
+``` 
+```{r, dont-run-mcemPump, eval = !runMCEMs, echo = !runMCEMs}
+``` 
 
 Both estimates are within 0.01 of the values reported by
-\citet{George_Makov_Smith_1993}\footnote{Table 2 of the paper accidentally swapped the two estimates.}. %\footnote{George, E.I., Makov, U.E. \& Smith,
-%  A.F.M. 1993. Conjugate likelihood
- % distributions. *Scand. J. Statist.* \textbf{20}:147-156.
- % Their numbers were accidentally swapped in Table 2.}.  
-Some discrepancy is to be expected since it is a Monte Carlo algorithm.
+[@George_Makov_Smith_1993] [Table 2 of the paper accidentally swapped the two estimates.].   Some discrepancy is to be expected since it is a Monte Carlo algorithm.
 
-## Creating your own functions
-{#sec:creating-your-own}
+## Creating your own functions {#sec:creating-your-own}
 
 
 
@@ -200,8 +182,8 @@ designated set of nodes and calculating every part of the model that
 depends on them. More details on programming in NIMBLE are in Part @ref(part:programming).
 
 Here is our *nimbleFunction*:
-<<nfPump>>=
-@ 
+```{r, nfPump}
+``` 
 
 Here are a few things to notice about the nimbleFunction.
 
@@ -221,7 +203,7 @@ Here are a few things to notice about the nimbleFunction.
   introduced above in R, can be used in NIMBLE.
   * The special function `copy` is used here to record values
   from the model into the modelValues object.  
-  * Multiple instances, or ``specializations'', can be made by
+  * Multiple instances, or 'specializations', can be made by
   calling `simNodesMany` with different arguments.  Above, `simNodesTheta1to5` has
   been made by calling `simNodesMany` with the `pump` model and
   nodes `"theta[1:5]"` as inputs to
@@ -230,17 +212,15 @@ Here are a few things to notice about the nimbleFunction.
   are objects of a uniquely
   generated R reference class with fields (member data) for the results of the
   `setup` code and a `run` method (member function). 
-   % Arbitrary other methods can be provided with a `methods` argument, following the syntax of R's `setRefClass` function.
-  % NOTE: CJP removed previous sentence as I think it is too involved for the lightning intro - CJP
-
+     
 
 By the way, `simNodesMany` is very similar to a standard
 `nimbleFunction` provided with nimble, `simNodesMV`.
 
 Now let's execute this nimbleFunction in R, before compiling it.
 
-<<runPumpSimsR>>=
-@ 
+```{r, runPumpSimsR}
+``` 
 
 In this code we have initialized the values of `alpha` and `beta`
 to their MLE and then recorded the `theta` values to use below.  Then we
@@ -252,8 +232,8 @@ for `theta` and the log probabilities of `x`.  Notice that
 
 Finally, let's compile the function and run that version.
 
-<<runPumpSimsC>>=
-@ 
+```{r, runPumpSimsC}
+``` 
 
 Given the same initial values and the same random number generator
 seed, we got identical results for `theta[1:5]` and their dependencies, but it happened much faster.
