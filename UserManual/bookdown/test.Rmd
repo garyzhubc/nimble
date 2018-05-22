@@ -1,0 +1,5 @@
+#### Example: simulating arbitrary collections of nodes {#sec:arbitr-coll-nodes}
+
+```{r, calcSimGLPdemos} 
+``` 
+

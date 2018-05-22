@@ -1,7 +1,18 @@
-
-
+<!---\n% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr\n-->
 
 # Welcome to NIMBLE {#sec:welcome-nimble}
+
+See  \\@ref(sec:what-is-nimble)  @ref(#sec:what-is-nimble)  \@ref(sec:what-is-nimble)
+
+  Name          Usage                                     Density                                 Lower Upper
+  ------------- ----------------------------------------- --------------------------------------- ----- -----  
+  Bernoulli     `dbern(prob = p)`                         $p^x (1 - p)^{1 -x}$                    $0$   $1$ 
+                $0 < p < 1$\
+  Beta          `dbeta(shape1 = a,`                       $\frac{x^{a-1}(1-x)^{b-1}}{\beta(a,b)}$ $0$   $1$  
+                `shape2 = b)`, $a > 0$, $b > 0$
+  Binomial      `dbin(prob = p, size = n)`                ${n \choose x} p^x (1-p)^{n-x}$           $0$   $n$
+                $0 < p < 1$, $n \in \mathbb{N}^*$
+
 
 NIMBLE is a system for building and sharing analysis methods for
 statistical models from R, especially for hierarchical models and
@@ -43,8 +54,8 @@ You can think of NIMBLE as comprising four pieces:
 
 
   * A system for writing statistical models flexibly, which is an
-  extension of the BUGS language [See Chapter
-    @ref(cha:writing-models) for information about NIMBLE's version of
+  extension of the BUGS language^[See Chapter
+    \@ref(sec:what-is-nimble) for information about NIMBLE's version of
     BUGS.].
   * A library of algorithms such as MCMC.
   * A language, called NIMBLE, embedded within and similar in style
@@ -62,7 +73,7 @@ statistical models, it's useful for other goals too.  You could use it
 for simpler models.  And since NIMBLE can automatically compile R-like
 functions into C++ that use the Eigen library for fast linear algebra,
 you can use it to program fast numerical functions without any model
-involved [The packages [Rcpp](http://www.rcpp.org/) and
+involved^[The packages [Rcpp](http://www.rcpp.org/) and
   RcppEigen provide different ways of connecting C++, the Eigen
   library and R.  In those packages you program directly in C++, while
   in NIMBLE you program in R in a nimbleFunction and the NIMBLE compiler

@@ -1,0 +1,34 @@
+
+
+```{r, echo=FALSE}
+require(nimble)
+``` 
+
+# Programming with models: model calculations
+
+### Accessing log probabilities via logProb variables {#sec:access-log-prob}
+
+For each variable that contains at least one stochastic node, NIMBLE generates a model variable with the
+prefix  'logProb_'.  When the stochastic node is scalar, the
+`logProb` variable will have the same size.  For example:
+
+```{r, usingModelLogProbs}
+``` 
+
+Creation of `logProb` variables for stochastic multivariate nodes
+is trickier, because they can represent an arbitrary block of a larger
+variable.  In general NIMBLE records the logProb values using
+the lowest possible indices.  For example, if `x[5:10, 15:20]`
+follows a Wishart distribution, its log probability (density) value
+will be stored in `logProb_x[5, 15]`.  When possible, NIMBLE will
+reduce the dimensions of the corresponding logProb variable.  For
+example, in
+
+```{r, eval = FALSE}
+for(i in 1:10) x[i,] ~ dmnorm(mu[], prec[,])
+``` 
+
+`x` may be 10$\times$20 (dimensions must be provided), but `logProb_x`
+will be 10$\times$1.  For the most part you do not need to worry about
+how NIMBLE is storing the log probability values, because you can
+always get them using `getLogProb`.  

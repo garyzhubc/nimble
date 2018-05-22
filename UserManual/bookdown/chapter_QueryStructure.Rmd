@@ -1,0 +1,7 @@
+
+
+```{r, echo=FALSE}
+require(nimble)
+``` 
+
+# Programming with models: querying model structure

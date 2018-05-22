@@ -1,4 +1,4 @@
-
+<!---\n% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr\n-->
 
 
 
@@ -14,7 +14,7 @@ read_chunk(file.path('chunks', 'introExample_chunks.R'))  # one can put code chu
 
 Here we'll give a simple example of building a model and running some algorithms on the model, as well as creating our own user-specified algorithm. The goal is to give you a sense for what one can do in the system. Later sections will provide more detail.
 
-We'll use the *pump* model example from BUGS [The data set
+We'll use the *pump* model example from BUGS^[The data set
   describes failure rates of some pumps.].  We could load the model
 from the standard BUGS example file formats (Section @ref(sec:readBUGSmodel)), but instead we'll show
 how to enter it directly in R.
@@ -80,6 +80,7 @@ model are up to date.  First we show how
 to use the model's `getDependencies` method to query information
 about its graph.
 
+% TODO: the logic here is a bit weird - we say we want to know all parents of theta are initialized by our code actually finds dependencies of alpha+beta not parents of theta
 
 ```{r, manipPump}
 "
@@ -134,6 +135,9 @@ At this point we have initial values for all of the nodes in the model,
 and we have both the original and compiled versions of the model. As a first algorithm
 to try on our model, let's use NIMBLE's default MCMC. Note that conjugate relationships are detected for all nodes except for
 `alpha`, on which the default sampler is a random walk Metropolis sampler.
+%^[We haven't set up conjugate relationships for an
+%  exponential yet.]
+% footnote is true but not relevant as there is not a conj relationship for alpha in a gamma-distributed dependency
 
 ```{r, mcmcPump, fig.height=2.5}
 ``` 
@@ -162,7 +166,7 @@ include them.  The entire system is written in nimbleFunctions.
 
 ## Running MCEM {#sec:running-mcem}
 
-NIMBLE is a system for working with algorithms, not just an MCMC engine. So let's try maximizing the marginal likelihood for `alpha` and `beta` using Monte Carlo Expectation Maximization [Note that for this model, one could analytically integrate over `theta` and then numerically maximize the resulting marginal likelihood.]. 
+NIMBLE is a system for working with algorithms, not just an MCMC engine. So let's try maximizing the marginal likelihood for `alpha` and `beta` using Monte Carlo Expectation Maximization^[Note that for this model, one could analytically integrate over `theta` and then numerically maximize the resulting marginal likelihood.]. 
 
 ```{r, mcemPump, eval = runMCEMs, echo = runMCEMs}
 ``` 
@@ -170,7 +174,11 @@ NIMBLE is a system for working with algorithms, not just an MCMC engine. So let'
 ``` 
 
 Both estimates are within 0.01 of the values reported by
-[@George_Makov_Smith_1993] [Table 2 of the paper accidentally swapped the two estimates.].   Some discrepancy is to be expected since it is a Monte Carlo algorithm.
+[@George_Makov_Smith_1993]^[Table 2 of the paper accidentally swapped the two estimates.]. %^[George, E.I., Makov, U.E. \& Smith,
+%  A.F.M. 1993. Conjugate likelihood
+ % distributions. *Scand. J. Statist.* \textbf{20]:147-156.
+ % Their numbers were accidentally swapped in Table 2.}.  
+Some discrepancy is to be expected since it is a Monte Carlo algorithm.
 
 ## Creating your own functions {#sec:creating-your-own}
 
@@ -212,7 +220,9 @@ Here are a few things to notice about the nimbleFunction.
   are objects of a uniquely
   generated R reference class with fields (member data) for the results of the
   `setup` code and a `run` method (member function). 
-     
+   % Arbitrary other methods can be provided with a `methods` argument, following the syntax of R's `setRefClass` function.
+  % NOTE: CJP removed previous sentence as I think it is too involved for the lightning intro - CJP
+
 
 By the way, `simNodesMany` is very similar to a standard
 `nimbleFunction` provided with nimble, `simNodesMV`.
