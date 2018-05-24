@@ -1,18 +1,7 @@
-<!---\n% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr\n-->
+<!--- % See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr -->
+
 
 # Welcome to NIMBLE {#sec:welcome-nimble}
-
-See  \\@ref(sec:what-is-nimble)  @ref(#sec:what-is-nimble)  \@ref(sec:what-is-nimble)
-
-  Name          Usage                                     Density                                 Lower Upper
-  ------------- ----------------------------------------- --------------------------------------- ----- -----  
-  Bernoulli     `dbern(prob = p)`                         $p^x (1 - p)^{1 -x}$                    $0$   $1$ 
-                $0 < p < 1$\
-  Beta          `dbeta(shape1 = a,`                       $\frac{x^{a-1}(1-x)^{b-1}}{\beta(a,b)}$ $0$   $1$  
-                `shape2 = b)`, $a > 0$, $b > 0$
-  Binomial      `dbin(prob = p, size = n)`                ${n \choose x} p^x (1-p)^{n-x}$           $0$   $n$
-                $0 < p < 1$, $n \in \mathbb{N}^*$
-
 
 NIMBLE is a system for building and sharing analysis methods for
 statistical models from R, especially for hierarchical models and
@@ -55,7 +44,7 @@ You can think of NIMBLE as comprising four pieces:
 
   * A system for writing statistical models flexibly, which is an
   extension of the BUGS language^[See Chapter
-    \@ref(sec:what-is-nimble) for information about NIMBLE's version of
+    \@ref(cha:writing-models) for information about NIMBLE's version of
     BUGS.].
   * A library of algorithms such as MCMC.
   * A language, called NIMBLE, embedded within and similar in style
@@ -86,19 +75,19 @@ written in the NIMBLE language.
 
 ## How to use this manual
 
-We suggest everyone start with the Lightning Introduction in Chapter @ref(cha:intro).
+We suggest everyone start with the Lightning Introduction in Chapter \@ref(cha:intro).
 
 Then, if you want to jump into using NIMBLE's algorithms without learning
-about NIMBLE's programming system, go to Part @ref(part:models) to
-learn how to build your model and Part @ref(part:algorithms) to learn
+about NIMBLE's programming system, go to Part \@ref(part:models) to
+learn how to build your model and Part \@ref(part:algorithms) to learn
 how to apply NIMBLE's built-in algorithms to your model.
 
 If you want to learn about NIMBLE programming (nimbleFunctions), go to Part
-@ref(part:programming). This teaches how to program user-defined
+\@ref(part:programming). This teaches how to program user-defined
 function or distributions to use in BUGS code, compile your R code for
 faster operations, and write algorithms with NIMBLE. These algorithms
 could be specific algorithms for your particular model (such as a
 user-defined MCMC sampler for a parameter in your model) or general
 algorithms you can distribute to others. In fact the algorithms
-provided as part of NIMBLE and described in Part @ref(part:algorithms)
+provided as part of NIMBLE and described in Part \@ref(part:algorithms)
 are written as nimbleFunctions.

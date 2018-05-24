@@ -1,4 +1,4 @@
-<!---\n% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr\n-->
+<!--- % See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr -->
 
 
 
@@ -155,7 +155,7 @@ aEWSamp <- as.matrix(cLWF$mvEWSamples, "a")
     
 ### Particle MCMC (PMCMC) {#sec:particle-mcmc}
 
-In addition to our four particle filters, NIMBLE also has particle MCMC samplers implemented. These sample top-level parameters by using either a bootstrap filter or auxiliary particle filter to obtain estimates of the likelihood of a model(marginalizing over the latent states) for use in a Metropolis-Hastings MCMC step.  The `RW_PF`  sampler uses a univariate normal proposal distribution, and should be used to sample scalar top-level parameters.  The `RW_PF_block` sampler uses a multivariate normal proposal distribution for vectors of top-level parameters.  Each PMCMC sampler also includes an optional algorithm to estimate the optimal number of particles to use in the particle filter at each iteration, based on a trade-off between computational time and efficiency.  The PMCMC samplers can be specified with a call to `addSampler` with `type = "RW_PF"` or `type = "RW_PF_block"`, a syntax similar to the other MCMC samplers listed in Section @ref(sec:samplers-provided).
+In addition to our four particle filters, NIMBLE also has particle MCMC samplers implemented. These sample top-level parameters by using either a bootstrap filter or auxiliary particle filter to obtain estimates of the likelihood of a model(marginalizing over the latent states) for use in a Metropolis-Hastings MCMC step.  The `RW_PF`  sampler uses a univariate normal proposal distribution, and should be used to sample scalar top-level parameters.  The `RW_PF_block` sampler uses a multivariate normal proposal distribution for vectors of top-level parameters.  Each PMCMC sampler also includes an optional algorithm to estimate the optimal number of particles to use in the particle filter at each iteration, based on a trade-off between computational time and efficiency.  The PMCMC samplers can be specified with a call to `addSampler` with `type = "RW_PF"` or `type = "RW_PF_block"`, a syntax similar to the other MCMC samplers listed in Section \@ref(sec:samplers-provided).
 
 The `RW_PF` sampler and `RW_PF_block` sampler can be customized using the `control` list argument to set the adaptive properties of the sampler and options for the particle filter algorithm to be run.  In addition, setting the `pfOptimizeNparticles` `control` list option to be `TRUE` will allow the sampler to estimate the optimal number of particles for the bootstrap filter.   See `help(samplers)` for details. The MCMC configuration for the `timeModel` in the previous section will serve as an example for the use of our PMCMC sampler.  Here we use the identity matrix as our proposal covariance matrix.
 
@@ -186,13 +186,11 @@ timeConf$addSampler(target = c("a", "b", "c", "mu_0"), type = "RW_PF_block",
   of the algorithm and calling nimbleFunctions for computations.  
   
   NIMBLE provides an ascent-based MCEM algorithm, created using `buildMCEM`, that automatically determines when the algorithm has converged by examining 
-  the size of the changes in the likelihood between each iteration.  Additionally, the MCEM algorithm can provide an estimate of the asymptotic covariance matrix of the parameters.  An example of calculating the asymptotic covariance can be found in Section @ref(sec:estimate-mcem-cov).
+  the size of the changes in the likelihood between each iteration.  Additionally, the MCEM algorithm can provide an estimate of the asymptotic covariance matrix of the parameters.  An example of calculating the asymptotic covariance can be found in Section \@ref(sec:estimate-mcem-cov).
   
   We will revisit the *pump* example to illustrate the use of
   NIMBLE's MCEM algorithm.
-  
- %% newPump didn't exist so I'm creating it in some non-echoed code.
-```{r, echo=FALSE}
+<!--- % newPump didn't exist so I'm creating it in some non-echoed code. -->```{r, echo=FALSE}
 pumpCode <- nimbleCode({ 
   for (i in 1:N){
       theta[i] ~ dgamma(alpha,beta)
@@ -238,9 +236,9 @@ pumpMCEM <- buildMCEM(model = pump,
   integrated over (sampled via MCMC), rather than
   maximized.  These
   nodes must be stochastic, not deterministic! `latentNodes` will
-  be expanded as described in Section @ref(sec:arbitr-coll-nodes). I.e.,
-  either `latentNodes = "x"` or \cd{latentNodes = c("x[1]",
-    "x[2]")} will treat `x[1]` and `x[2]` as latent nodes if
+  be expanded as described in Section \@ref(sec:arbitr-coll-nodes). I.e.,
+  either `latentNodes = "x"` or `latentNodes = c("x[1]",
+    "x[2]")` will treat `x[1]` and `x[2]` as latent nodes if
   `x` is a vector of two values. All other non-data nodes will be
   maximized over. Note that `latentNodes` can include discrete nodes,
   but the nodes to be maximized cannot.  
@@ -263,7 +261,7 @@ The  `mcmcControl` argument will be passed to `configureMCMC` to define the MCMC
   
   In addition, the MCEM has some extra control options that can be used to further tune the convergence criterion.  See `help(buildMCEM)` for more information.  
   
-The `buildMCEM` function returns a list with two elements.  The first element is a function called `run`, which will use the MCEM algorithm to estimate the MLEs.  The second function is called `estimateCov`, and is described in Section @ref(sec:estimate-mcem-cov).  The `run` function can be run as follows. There is only one run-time argument, `initM`, which is the number of MCMC iterations to use when the algorithm is initialized.
+The `buildMCEM` function returns a list with two elements.  The first element is a function called `run`, which will use the MCEM algorithm to estimate the MLEs.  The second function is called `estimateCov`, and is described in Section \@ref(sec:estimate-mcem-cov).  The `run` function can be run as follows. There is only one run-time argument, `initM`, which is the number of MCMC iterations to use when the algorithm is initialized.
 
 ```{r, run-MCEM, eval = runMCEMs}
 pumpMLE <- pumpMCEM$run(initM = 1000)

@@ -7,38 +7,58 @@
 #' 
 #' @details Doesn't insert figures from external sources.
 #' 
-#' @author Loic Dutrieux
+#' @author Loic Dutrieux, modified by Chris Paciorek
 #' 
 #' @import stringr
 #'
 #'
 library(stringr)
 
-# need preamble.tex
-# checkForSelfParents issue occurs with newer NIMBLE on older R?
+## title page
+## issue with densityTableLong entries
 
-## not sure how to do \input for tables
+## check new version of eigen API and if tables for eigen are accurate
 
-##Section numbers?  unnumbered: number_sections = TRUE in YAML # Preface {-} ## not working
-## @ref(sec-foo) not working: \@ref(label)
+## EigenAsNimList syntax
+## $$ with dcar_proper and dcar_normal
+## % mcmc-litters chunk issue in chapter_MCMC
 
-# parts - see index.Rmd - not sure how to do this
+#```{r, child = 'densityAliasesTable.md'}
+#```
+
+# need to insert this:
+# Table: (\#tab:densityAliases) Distributions with alternative names (aliases)
+
+# need to weed out a bunch of latex stuff around tables
+
+# parts - see index.Rmd - not sure how to do this - can't do as separate part1.md
 
 # (PART) Part I {-}
-# (PART\*) Part I {-}
+                                        # (PART\*) Part I {-}
+
+
+if(FALSE) {
+    files = list.files(pattern = ".Rnw")
+    for(f in files) {
+        f = str_replace_all(f, "\\.Rnw", "")
+        latex2Rmd(f)
+    }
+}
 
 # for \n included with . could do regex("<<.*>>", dotall=TRUE)
 
 latex2Rmd <- function(input, save = TRUE) {
     inputFile <- paste0(input, ".Rnw")
     text <- readChar(inputFile, file.info(inputFile)$size)
-#     text <- str_replace_all(string = text, pattern = ",results='markup;\\$=\\\\\\$'", '') # can't get it to deal with \$ correctly
-     text <- str_replace_all(string = text, pattern = ",results='markup;.*?'", '')
-    text <- str_replace_all(string = text, pattern = '<<([\\s\\S]*?)>>=([\\s\\S]*?)@', replacement = '```{r, \\1}\\2```')
+
+    ## Order these in likelihood of nestedness
     
-                                        # Order these in likelihood of nestedness
-    text <- str_replace_all(string = text, pattern = "^\\s*%(.*?)\\n", "<!--- \\1 -->")
-    text <- str_replace_all(string = text, pattern = "\\n\\s*%(.*?)\\n", "\n<!--- \\1 -->")
+#   text <- str_replace_all(string = text, pattern = ",results='markup;\\$=\\\\\\$'", '') # can't get it to deal with \$ correctly
+    text <- str_replace_all(string = text, pattern = ",results='markup;.*?'", '')
+                                       
+    text <- str_replace_all(string = text, pattern = "^\\s*%(.*?)\\n", "<!--- \\1 -->\n")
+    text <- str_replace_all(string = text, pattern = "\\n\\s*%(.*?)\\n", "\n<!--- \\1 -->\n")
+    text <- str_replace_all(string = text, pattern = '<<([\\s\\S]*?)>>=([\\s\\S]*?)@', replacement = '```{r, \\1}\\2```')
     text <- str_replace_all(string = text, pattern = '\\\\href\\{([\\s\\S]*?)\\}\\{([\\s\\S]*?)\\}', replacement = '[\\2](\\1)')
     text <- str_replace_all(string = text, pattern = '\\\\url\\{([\\s\\S]*?)\\}', replacement = '[\\1]')
     text <- str_replace_all(string = text, pattern = '\\\\(texttt|code|file)\\{(.*?)\\}', replacement = '`\\2`')
@@ -56,7 +76,7 @@ latex2Rmd <- function(input, save = TRUE) {
     text <- str_replace_all(string = text, pattern = '\\\\cd\\*?\\{([\\s\\S]*?)\\}', replacement = '`\\1`') 
     text <- str_replace_all(string = text, pattern = '\\\\begin\\{(.*?)\\}', replacement = '')
     text <- str_replace_all(string = text, pattern = '\\\\end\\{(.*?)\\}', replacement = '')
-    text <- str_replace_all(string = text, pattern = '\\\\item', replacement = '  *')
+    text <- str_replace_all(string = text, pattern = '\\\\item', replacement = '  -')
 
     text <- str_replace_all(string = text, pattern = '\\\\verb\\|(.*?)\\|', replacement = '`\\1`')
 
@@ -69,7 +89,11 @@ latex2Rmd <- function(input, save = TRUE) {
     text <- str_replace_all(string = text, pattern = '\\\\_', '_')
     text <- str_replace_all(string = text, pattern = '\\\\\\$', '$')
     text <- str_replace_all(string = text, pattern = '\\\\\\\\', '\n')
-     text <- str_replace_all(string = text, pattern = '\\.tex', '\\.md')
-    text <- str_replace_all(string = text, pattern = '\\\\cite[pt]\\*?\\{(.*?)\\}', replacement = '[@\\1]') 
+    text <- str_replace_all(string = text, pattern = '\\.tex', '\\.md')
+    text <- str_replace_all(string = text, pattern = '\\$times\\$', ' $ \times $ ')
+    text <- str_replace_all(string = text, pattern = '\\\\cite[pt]\\*?\\{(.*?)\\}', replacement = '[@\\1]')
+
+    text <- str_replace_all(string = text, pattern = '\\\\input\\{(.*?)\\}', "```{r, child = '\\1'}\n```")
+
     if(save)  writeLines(text, paste0(input, ".Rmd"), sep = '')
 }

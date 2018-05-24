@@ -1,4 +1,4 @@
-<!---\n% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr\n-->
+<!--- % See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr -->
 
 
 
@@ -16,7 +16,7 @@ Here we'll give a simple example of building a model and running some algorithms
 
 We'll use the *pump* model example from BUGS^[The data set
   describes failure rates of some pumps.].  We could load the model
-from the standard BUGS example file formats (Section @ref(sec:readBUGSmodel)), but instead we'll show
+from the standard BUGS example file formats (Section \@ref(sec:readBUGSmodel)), but instead we'll show
 how to enter it directly in R.
 
 In this 'lightning introduction' we will:
@@ -79,9 +79,7 @@ log probabilities of `x` to ensure all parts of the
 model are up to date.  First we show how
 to use the model's `getDependencies` method to query information
 about its graph.
-
-% TODO: the logic here is a bit weird - we say we want to know all parents of theta are initialized by our code actually finds dependencies of alpha+beta not parents of theta
-
+<!---  TODO: the logic here is a bit weird - we say we want to know all parents of theta are initialized by our code actually finds dependencies of alpha+beta not parents of theta -->
 ```{r, manipPump}
 "
 ``` 
@@ -125,7 +123,7 @@ return samples, summary statistics, and WAIC values:
 ```{r, nimbleMCMCpump}
 ``` 
 
-See Section @ref(sec:nimbleMCMC) or `help(nimbleMCMC)` for more
+See Section \@ref(sec:nimbleMCMC) or `help(nimbleMCMC)` for more
 details about using `nimbleMCMC`.
 
 
@@ -135,10 +133,8 @@ At this point we have initial values for all of the nodes in the model,
 and we have both the original and compiled versions of the model. As a first algorithm
 to try on our model, let's use NIMBLE's default MCMC. Note that conjugate relationships are detected for all nodes except for
 `alpha`, on which the default sampler is a random walk Metropolis sampler.
-%^[We haven't set up conjugate relationships for an
-%  exponential yet.]
-% footnote is true but not relevant as there is not a conj relationship for alpha in a gamma-distributed dependency
-
+<!--- ^[We haven't set up conjugate relationships for an -->%  exponential yet.]
+<!---  footnote is true but not relevant as there is not a conj relationship for alpha in a gamma-distributed dependency -->
 ```{r, mcmcPump, fig.height=2.5}
 ``` 
 
@@ -175,10 +171,8 @@ NIMBLE is a system for working with algorithms, not just an MCMC engine. So let'
 
 Both estimates are within 0.01 of the values reported by
 [@George_Makov_Smith_1993]^[Table 2 of the paper accidentally swapped the two estimates.]. %^[George, E.I., Makov, U.E. \& Smith,
-%  A.F.M. 1993. Conjugate likelihood
- % distributions. *Scand. J. Statist.* \textbf{20]:147-156.
- % Their numbers were accidentally swapped in Table 2.}.  
-Some discrepancy is to be expected since it is a Monte Carlo algorithm.
+<!---   A.F.M. 1993. Conjugate likelihood --> % distributions. *Scand. J. Statist.* \textbf{20]:147-156.
+<!---  Their numbers were accidentally swapped in Table 2.}.   -->Some discrepancy is to be expected since it is a Monte Carlo algorithm.
 
 ## Creating your own functions {#sec:creating-your-own}
 
@@ -187,7 +181,7 @@ Some discrepancy is to be expected since it is a Monte Carlo algorithm.
 Now let's see an example of writing our own algorithm and using it on
 the model. We'll do something simple: simulating multiple values for a
 designated set of nodes and calculating every part of the model that
-depends on them. More details on programming in NIMBLE are in Part @ref(part:programming).
+depends on them. More details on programming in NIMBLE are in Part \@ref(part:programming).
 
 Here is our *nimbleFunction*:
 ```{r, nfPump}
@@ -220,8 +214,7 @@ Here are a few things to notice about the nimbleFunction.
   are objects of a uniquely
   generated R reference class with fields (member data) for the results of the
   `setup` code and a `run` method (member function). 
-   % Arbitrary other methods can be provided with a `methods` argument, following the syntax of R's `setRefClass` function.
-  % NOTE: CJP removed previous sentence as I think it is too involved for the lightning intro - CJP
+<!---  Arbitrary other methods can be provided with a `methods` argument, following the syntax of R's `setRefClass` function. -->  % NOTE: CJP removed previous sentence as I think it is too involved for the lightning intro - CJP
 
 
 By the way, `simNodesMany` is very similar to a standard

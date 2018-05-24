@@ -1,4 +1,4 @@
-<!---\n% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr\n-->
+<!--- % See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr -->
 
 
 ```{r, echo=FALSE}
@@ -19,7 +19,7 @@ starting from BUGS code.
 
 NIMBLE provides two functions for creating model objects:
 `nimbleModel` and `readBUGSmodel`. The first, `nimbleModel`,
-is more general and was illustrated in Chapter @ref(cha:intro). The
+is more general and was illustrated in Chapter \@ref(cha:intro). The
 second, `readBUGSmodel` provides compatibility with BUGS file
 formats for models, variables, data, and initial values for MCMC.  
 
@@ -51,15 +51,13 @@ NIMBLE makes a distinction between data and constants:
   * *Data* is a label for the role a node plays in the model.
   Nodes marked as data will by default be protected from any functions
   that would simulate over their values (see `simulate` in Chapter
-  @ref(cha:using-bugs-models)), but it is possible to over-ride
+  \@ref(cha:using-bugs-models)), but it is possible to over-ride
   that default or to change their values by direct assignment.  This
   allows an algorithm to be applied to many data sets in the same
   model without re-creating the model each time.  It also allows
   simulation of data in a model.  
-  % TODO: I don't think this statement is true (i.e., setData()):
-  % Data must be provided when an
-  %instance of a model is created from the model definition, although
-  % they can also be provided earlier when a model is defined.
+<!---  TODO: I don't think this statement is true (i.e., setData()): -->  % Data must be provided when an
+<!--- instance of a model is created from the model definition, although -->  % they can also be provided earlier when a model is defined.
 
 
 WinBUGS, OpenBUGS and JAGS do not allow data values to be changed or
@@ -238,8 +236,7 @@ analogous to what would populate the list if a list were provided
 instead.  Please see the JAGS manual examples or the
 `classic_bugs` directory in the NIMBLE package for example
 syntax. 
-% PdV - at some point I think there was discussion of code that would appear in a 'data' block being put in the model code directly, but I think this could lead to variable on the LHS twice with <- and ~, so I think I'm not understanding what we want to allow in code defining a model
-% I have no recollection of that idea.  Doesn't sound safe. -Perry
+<!---  PdV - at some point I think there was discussion of code that would appear in a 'data' block being put in the model code directly, but I think this could lead to variable on the LHS twice with <- and ~, so I think I'm not understanding what we want to allow in code defining a model -->% I have no recollection of that idea.  Doesn't sound safe. -Perry
 NIMBLE by and large does not need the information given in a `var`
 block but occasionally this is used to determine dimensionality, such
 as in the case of syntax like `xbar <- mean(x[])` where `x` is a variable that appears only on the right-hand side of BUGS expressions.   
@@ -283,7 +280,7 @@ it helps define the model.
 
 NIMBLE models are objects that can be modified and manipulated from R.
 In this section we introduce some basic ways to use a model object.
-Chapter @ref(cha:using-bugs-models) covers more topics for writing
+Chapter \@ref(cha:using-bugs-models) covers more topics for writing
 algorithms that use models.
 
 
@@ -293,8 +290,7 @@ This section discusses some basic concepts and terminology to
 be able to speak about NIMBLE models clearly.
 
 Suppose we have created a model from the following BUGS code.
-% This chunk can be modified to jut remove the nimbleModel call.
-
+<!---  This chunk can be modified to jut remove the nimbleModel call. -->
 ```{r, echo=FALSE,message=FALSE}
 read_chunk(file.path('chunks', 'usingBugsModels_chunks.R'))
 ``` 
@@ -327,15 +323,15 @@ In NIMBLE terminology:
 ### Determining the nodes and variables in a model
 
   
-One can determine the variables in a model using `getVarNames` and the  nodes in a model using `getNodeNames`. Optional arguments to `getNodeNames` allow you to select only certain types of nodes, as discussed in Section @ref(sec:get-nodes) and in the R help for `getNodeNames`. 
+One can determine the variables in a model using `getVarNames` and the  nodes in a model using `getNodeNames`. Optional arguments to `getNodeNames` allow you to select only certain types of nodes, as discussed in Section \@ref(sec:get-nodes) and in the R help for `getNodeNames`. 
 
 ```{r, getVarAndNodeNames}
 ``` 
 
 Note that some of the nodes may be 'lifted' nodes introduced by
-NIMBLE (Section @ref(sec:introduced-nodes)). In this case `lifted_d1_over_sqrt_oPtau_cP` (this is a node for the standard deviation of the `z` nodes using NIMBLE's canonical parameterization of the normal distribution) is the only lifted node in the model.
+NIMBLE (Section \@ref(sec:introduced-nodes)). In this case `lifted_d1_over_sqrt_oPtau_cP` (this is a node for the standard deviation of the `z` nodes using NIMBLE's canonical parameterization of the normal distribution) is the only lifted node in the model.
 
-To determine the dependencies of one or more nodes in the model, you can use `getDependencies` as discussed in Section @ref(sec:cdgetdependencies).
+To determine the dependencies of one or more nodes in the model, you can use `getDependencies` as discussed in Section \@ref(sec:cdgetdependencies).
 
 
 ### Accessing nodes {#sec:accessing-nodes}
@@ -394,7 +390,7 @@ The `keep.source = FALSE` makes `parse` more efficient.
 Syntax like `model[["z[2, 3]"]]` may seem strange at first, because
 the natural habit of an R user would be `model[["z"]][2,3]`.  To see
 its utility, consider the example of writing the nimbleFunction given in
-Section @ref(sec:creating-your-own).  By giving every scalar node a name, even
+Section \@ref(sec:creating-your-own).  By giving every scalar node a name, even
 if it is part of a multivariate variable, one can write functions in R
 or NIMBLE that access any single node by a name, regardless of the
 dimensionality of the variable in which it is embedded.  This is particularly

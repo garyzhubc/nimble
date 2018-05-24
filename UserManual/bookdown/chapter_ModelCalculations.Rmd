@@ -28,7 +28,7 @@ example, in
 for(i in 1:10) x[i,] ~ dmnorm(mu[], prec[,])
 ``` 
 
-`x` may be 10$\times$20 (dimensions must be provided), but `logProb_x`
-will be 10$\times$1.  For the most part you do not need to worry about
+`x` may be 10 $\times$ 20 (dimensions must be provided), but `logProb_x`
+will be 10 $\times$ 1.  For the most part you do not need to worry about
 how NIMBLE is storing the log probability values, because you can
 always get them using `getLogProb`.  

@@ -1,4 +1,4 @@
-<!---\n% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr\n-->
+<!--- % See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr -->
 
 
 ```{r, echo=FALSE}
@@ -7,16 +7,11 @@ require(nimble)
 
 # Writing models in NIMBLE's dialect of BUGS {#cha:writing-models}
 
-\@ref{cha:writing-models} \@ref{writing-models}
-
 Models in NIMBLE are written using a variation on the BUGS language.
 From BUGS code, NIMBLE  creates a model object.  This chapter
 describes NIMBLE's version of BUGS.  The next chapter explains how to
 build and manipulate model objects.
-
-
-% With NIMBLE you can also define your own distributions and functions for use in BUGS code; discussion of this functionality is deferred to Chapter \@ref(cha:user-defined) as it requires the use of nimbleFunctions. 
-
+<!---  With NIMBLE you can also define your own distributions and functions for use in BUGS code; discussion of this functionality is deferred to Chapter \@ref(cha:user-defined) as it requires the use of nimbleFunctions.  -->
 
 ## Comparison to BUGS dialects supported by WinBUGS, OpenBUGS and JAGS {#sec:supp-feat-bugs}
 
@@ -285,33 +280,11 @@ those of BUGS^[Note that the same distributions are available
 parameterizations for a variety of distributions as described next.
 See Section \@ref(sec:user-distributions) to learn how to write new distributions using nimbleFunctions.
 
-  Name          Usage                                     Density                                 Lower Upper
-  ------------- ----------------------------------------- --------------------------------------- ----- -----
-  Bernoulli     `dbern(prob = p)`                         $p^x (1 - p)^{1 -x}$                    $0$   $1$
-                $0 < p < 1$
-  Beta          `dbeta(shape1 = a,`                       $\frac{x^{a-1}(1-x)^{b-1}}{\beta(a,b)}$   $0$   $1$
-                `shape2 = b)`, $a > 0$, $b > 0$
-  Binomial      `dbin(prob = p, size = n)`                ${n \choose x} p^x (1-p)^{n-x}$           $0$   $n$
-                $0 < p < 1$, $n \in \mathbb{N}^*$
-  Intrinsic     `dcar_normal(adj, weights,`               see chapter 9 for details
-  CAR           `num, tau, c, zero_mean`
-  Categorical   `dcat(prob = p)`                          $\frac{p_x}{\sum_i p_i}$                  $1$   $N$
-  Chi-square    `dchisq(df = k)`                          $7$          $0$ 
-                $k > 0$
-  Dirichlet     `ddirch(alpha = `$alpha$`)`               $8$       $0$                        
-                $\alpha_j \geq 0$
-  Exponential   `dexp(rate = `$\lambda$`)`                $\lambda \exp(-\lambda x)$                $0$
-                $\lambda > 0$
-  Flat          `dflat()`                                 $\propto 1$ (improper)                  
-  Gamma         `dgamma(shape = r, rate = `$\lambda$`)`   $9$       $0$
-                $\lambda > 0$, $r > 0$
-  Half flat     `dhalfflat()`                              $\propto 1$ (improper)                    $0$
+```{r, child = 'densityTableLong.md'}
+```
 
-$\frac{x^{\frac{k}{2}-1} \exp(-x/2)}{2^{\frac{k}{2}}\Gamma(\frac{k}{2})}$
-$\Gamma(\sum_i \alpha_i) \prod_j \frac{ x_j^{\alpha_j - 1}}{ \Gamma(\alpha_j)}$
- 
- 
-\paragraph{Improper distributions}
+
+##### Improper distributions
 
 Note that `dcar_normal`, `dflat` and `dhalfflat` specify improper prior distributions
 and should only be used when the posterior distribution of the model is known to be proper.
@@ -353,36 +326,34 @@ but it need not.  If names are given, they can be given in any
 order.  NIMBLE knows that rate is an alternative to scale and that
 (mean, sd) are an alternative to (shape, scale or rate). 
 
+```{r, child = 'parameterizationTableLong.md'}
+```
 
 Note that for multivariate normal, multivariate t, Wishart, and Inverse Wishart, the canonical
 parameterization uses the Cholesky decomposition of one of the
 precision/inverse scale or covariance/scale matrix. For example, for the multivariate normal, if  `prec_param=TRUE`, the `cholesky` argument is treated as the Cholesky
 decomposition of a precision matrix.  Otherwise it is treated as the
 Cholesky decomposition of a covariance matrix. 
-
-% In some cases it may be more efficient to use that parameterization
-% directly.  % PdV removed this because it is obtuse: In what cases?
-% Doesn't lifting of the cholesky computation take care of inefficiency?
-% What does "use that parameterization directly" mean, when there is
-% no meaning of "indirect" use of a parameterization?  
-
+<!---  In some cases it may be more efficient to use that parameterization -->% directly.  % PdV removed this because it is obtuse: In what cases?
+<!---  Doesn't lifting of the cholesky computation take care of inefficiency? -->% What does "use that parameterization directly" mean, when there is
+<!---  no meaning of "indirect" use of a parameterization?   -->
 In addition, NIMBLE supports alternative distribution names, known as aliases, as in JAGS, as specified in Table \@ref(table:distributions-aliases). 
 
 
+```{r, child = 'densityAliasesTable.md'}
+```
 
-%TODO: WHAT IS THE STATUS OF THE NEXT STATEMENT?: I've added inverse gamma in 0.6-4 and will do inverse wishart in 0.6-5. Hopefully will get to some others as well soon-ish - CJP.
 
+<!--- TODO: WHAT IS THE STATUS OF THE NEXT STATEMENT?: I've added inverse gamma in 0.6-4 and will do inverse wishart in 0.6-5. Hopefully will get to some others as well soon-ish - CJP. -->
 We plan to, but do not currently, include the following distributions as part of core NIMBLE: double exponential (Laplace), beta-binomial, Dirichlet-multinomial, F, Pareto, or forms of the multivariate t other than the standard one provided. 
-% [F is easy to add as it has R functions]
-
+<!---  [F is easy to add as it has R functions] -->
 
 
 ### Available BUGS language functions {#subsec:BUGS-lang-fxns}
 
 Tables \@ref(table:functions-bugs)-\@ref(table:functions-matrix-bugs) show the
 available operators and functions. 
-% These are also available for `nimbleFunction` programming (see Chapter \@ref(cha:progr-with-models)).  In fact, BUGS model nodes are implemented as `nimbleFunction`s that are custom-generated from BUGS declarations, so it would be more correct to say that functions and operators available for `nimbleFunction`s are also available for the model declarations.
-Support for more general R expressions
+<!---  These are also available for `nimbleFunction` programming (see Chapter \@ref(cha:progr-with-models)).  In fact, BUGS model nodes are implemented as `nimbleFunction`s that are custom-generated from BUGS declarations, so it would be more correct to say that functions and operators available for `nimbleFunction`s are also available for the model declarations. -->Support for more general R expressions
 is covered in Chapter \@ref(cha:RCfunctions) about programming
 with nimbleFunctions. 
 
@@ -392,31 +363,33 @@ by NIMBLE are also listed. Note that we provide distribution functions
 for use in calculations, namely the 'p', 'q', and 'd' functions.
  See Section \@ref(sec:nimble-dist-funs) for details on the syntax for using distribution functions as functions in deterministic calculations, as only some parameterizations are allowed and the names of some distributions differ from those used to define stochastic nodes in a model. 
 
-% TODO: CJP moved this material to Chap 9 - that's where it is most relevant 
-% so I thought it best to go into the caveats there
-%Currently 'r' functions only return one random
-%draw at a time, and the first argument must always be 1.  For
-%multivariate distribution functions the `prec_param` or
-%`scale_param` argument must be provided, indicating when a
-%covariance or precision matrix has been given.  In a future release we
-%will provide a variety of distribution functions, including density,
-%cumulative distribution and quantile functions, using the same syntax
-%as `dnorm`, `pnorm`, `qnorm`.  We will also extend the
-%alternative parameterizations with named parameters to
-%`nimbleFunctions`.
+```{r, child = 'functionTableLong.md'}
+```
 
 
+```{r, child = 'functionTableMatrixLong.md'}
+```
+```{r, child = 'eigenSvdTableMatrixElements.md'}
+```
 
 
-% [NOTE: JAGS source package has the Tex files for Martyn's manual, so we can copy the table formatting - s doc/manual/jags_user_manual.md]
-
+<!---  [NOTE: JAGS source package has the Tex files for Martyn's manual, so we can copy the table formatting - s doc/manual/jags_user_manual.md] -->
 See Section \@ref(sec:user-functions) to learn how to use nimbleFunctions to write new functions for use in BUGS code.
 
 ### Available link functions {#subsec:BUGS-link}
 
 NIMBLE allows the link functions listed in Table \@ref(table:links).
+<!--- [!h] 
+`r version`b+cloglog(y) <- x+ & Complementary log log & $0 < y < 1$ & `r version`b+y <- icloglog(x)+ 
 
-      
+`r version`b+log(y) <- x+    & Log           & $0 < y$ &  `r version`b+y <- exp(x)+ 
+
+`r version`b+logit(y) <- x+  & Logit         & $0 < y < 1$ &  `r version`b+y <- expit(x)+ 
+
+`r version`b+probit(y) <- x+ & Probit        & $0 < y < 1$ &  `r version`b+y <- iprobit(x)+
+-->
+
+<!---  -->      
 Link functions are specified as functions applied to a node on the
 left hand side of a BUGS expression. To handle link functions in
 deterministic declarations, NIMBLE converts the declaration into an
@@ -451,7 +424,9 @@ Either of the following forms,
 
 Truncation means the possible values of `x` are limited a priori, hence the probability density of `x` must be normalized^[NIMBLE uses the CDF and inverse CDF (quantile) functions of a distribution to do this; in some cases if one uses truncation to include only the extreme tail of a distribution, numerical difficulties can arise.].  In this example it would be the normal probability density divided by its integral from 0 to `a`.  Like JAGS, NIMBLE also provides `I` as a synonym for `T` to accommodate older BUGS code, but `T` is preferred because it disambiguates multiple usages of `I` in BUGS.
 
-#### Censoring Censoring refers to the situation where one datum gives the lower or upper bound on an unobserved random variable.  This is common in survival analysis, when for an individual still surviving at the end of a study, the age of death is not known and hence is 'censored' (right-censoring).  NIMBLE adopts JAGS syntax for censoring, as follows (using right-censoring as an example):
+#### Censoring
+
+Censoring refers to the situation where one datum gives the lower or upper bound on an unobserved random variable.  This is common in survival analysis, when for an individual still surviving at the end of a study, the age of death is not known and hence is 'censored' (right-censoring).  NIMBLE adopts JAGS syntax for censoring, as follows (using right-censoring as an example):
  ```{r, dinterval-example, eval=FALSE}
 censored[i] ~ dinterval(t[i], c[i])
 t[i] ~ dweib(r, mu[i])
@@ -467,15 +442,15 @@ below the observed times for uncensored entries (e.g., `0`, assuming `t[i] $>$ 0
 
 The `dinterval` is not really a distribution but rather a trick: in the above example when `censored[i] = 1` it gives a 'probability' of 1 if `t[i] $>$ c[i]` and 0 otherwise.  This means that `t[i] $\le$ c[i]` is treated as impossible.  More generally than simple right- or left-censoring, `censored[i] $\sim$ dinterval(t[i], c[i, ])` is defined such that for a vector of increasing cutpoints, `c[i, ]`, `t[i]` is enforced to fall within the `censored[i]`-th cutpoint interval.  This is done by setting data `censored[i]` as follows:
 
-\mbox{`censored[i] = 0`} & \mbox{if} & \mbox{`t[i] $\le$ c[i, 1]`} \nonumber n
-\mbox{`censored[i] = m`} & \mbox{if} & \mbox{`c[i, m] $<$ t[i] $\le$ c[i, m+1]` for } 1 <= m <= M \nonumber n
+\mbox{`censored[i] = 0`} & \mbox{if} & \mbox{`t[i] $\le$ c[i, 1]`} \nonumber 
+
+\mbox{`censored[i] = m`} & \mbox{if} & \mbox{`c[i, m] $<$ t[i] $\le$ c[i, m+1]` for } 1 <= m <= M \nonumber 
+
 \mbox{`censored[i] = M`} & \mbox{if} & \mbox{`c[i, M] $<$ t[i]`}.\nonumber
 
 (The `i` index is provided only for consistency with the previous example.)  The most common uses of `dinterval` will be for left- and right-censored data, in which case `c[i,]` will be a single value (and typically given as simply `c[i]`), and for interval-censored data, in which case `c[i,]` will be a vector of two values.  
-% TODO: Next line removed by CJP as I thought it was confusing:
-% or `x[i] $\sim$ dinterval(c[i], t[i])` with `x[i]` set to 1.
-% WHY - our dinterval code treats the 2nd arg as possibly a vector - the above presumably works for scalars but I think it is clearer if we always use the first arg as the data value and the 2nd as the interval points
-
+<!---  TODO: Next line removed by CJP as I thought it was confusing: -->% or `x[i] $\sim$ dinterval(c[i], t[i])` with `x[i]` set to 1.
+<!---  WHY - our dinterval code treats the 2nd arg as possibly a vector - the above presumably works for scalars but I think it is clearer if we always use the first arg as the data value and the 2nd as the interval points -->
 Nodes following a `dinterval` distribution should normally be set
 as `data` with known values. Otherwise, the node may be simulated during initialization in some algorithms (e.g., MCMC) and thereby establish a permanent, perhaps unintended, constraint.  
 
@@ -493,13 +468,9 @@ constraint_data ~ dconstraint( mu1 + mu2 > 0 )
 with `constraint_data` set (as `data`) to 1.  This is
 equivalent to a half-normal distribution on the half-plane $\mu_1 +
 \mu_2 > 0$.  Nodes following `dconstraint` should be provided as data for the same reason of avoiding unintended initialization described above for `dinterval`.
-
-%If one simulates from the model using the `simulate` functions and the condition is not satisfied, then `const` will be 0 and the log probability of `const` (and therefore of the model as whole) will be $-\infty$.
-
+<!--- If one simulates from the model using the `simulate` functions and the condition is not satisfied, then `const` will be 0 and the log probability of `const` (and therefore of the model as whole) will be $-\infty$. -->
 Formally, `dconstraint(cond)` is a probability distribution on $\left\{ 0, 1 \right\}$ such that $P(1) = 1$ if `cond` is `TRUE` and $P(0) = 1$ if `cond` is `FALSE`. 
-
-% TODO: Chris thought this wording is confusing:
-%Like `dinterval`, `dconstraint` results in distributions that are not normalized (e.g. for (`mu1`, `mu2`)), which makes most sense if the constraint is observed rather than established a priori. 
+<!---  TODO: Chris thought this wording is confusing: -->%Like `dinterval`, `dconstraint` results in distributions that are not normalized (e.g. for (`mu1`, `mu2`)), which makes most sense if the constraint is observed rather than established a priori. 
 
 Of course, in many cases, parameterizing the model so that the
 constraints are automatically respected may be a better strategy than
@@ -510,7 +481,7 @@ parameters). For such restrictive constraints, general purpose
 algorithms that are not tailored to the constraints may fail or be inefficient. If constraints are used, it will generally be wise to ensure the model is initialized with values that satisfy them.
 
 
-\paragraph{Ordering}
+##### Ordering
 
 To specify an ordering of parameters, such as $\alpha_1 <= \alpha_2 <= \alpha_3$ one can use `dconstraint` as follows: 
 ```{r, ordering-example, eval=FALSE}
@@ -524,8 +495,7 @@ alpha[2] ~ dnorm(0, 1) I(alpha[1], alpha[3])
 alpha[3] ~ dnorm(0, 1) I(alpha[2], )
 
 as this does not represent a directed acyclic graph. 
-% TODO: CHRIS, WOULDN'T THIS WORK WITH `alpha[1] $\sim$ dnorm(0, 1)`?  DOES BUGS REALLY ALLOW THIS NON-DAG?
-% PERRY, JAGS manual indicates the above is allowed in BUGS. Are you asking if it would work in NIMBLE with alpha1~dnorm(0,1) -- no because alpha2 still depends on alpha3 and vice versa
+<!---  TODO: CHRIS, WOULDN'T THIS WORK WITH `alpha[1] $\sim$ dnorm(0, 1)`?  DOES BUGS REALLY ALLOW THIS NON-DAG? -->% PERRY, JAGS manual indicates the above is allowed in BUGS. Are you asking if it would work in NIMBLE with alpha1~dnorm(0,1) -- no because alpha2 still depends on alpha3 and vice versa
 
 Also note that specifying prior ordering using `T(,)` can result in possibly unexpected results.  For example:
 

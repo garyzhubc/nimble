@@ -8,7 +8,7 @@ require(nimble)
 
 Here we describe how one can get information about NIMBLE models and
 carry out operations on a model. While all of this functionality can
-be used from R, its primary use occurs when writing nimbleFunctions (see Chapter @ref(cha:progr-with-models)). 
+be used from R, its primary use occurs when writing nimbleFunctions (see Chapter \@ref(cha:progr-with-models)). 
 Information about node types, distributions, and dimensions can be
 used to determine algorithm behavior in *setup* code of nimbleFunctions. Information
 about node or variable values or the parameter and bound values of a node would generally be used for algorithm
@@ -17,25 +17,26 @@ on a model, including setting node or variable values, would generally be done i
 
 ## The variables and nodes in a NIMBLE model {#sec:accessing-variables}
 
-Section @ref(sec:nodes-and-variables) defines what we mean by variables and nodes in a NIMBLE model and discusses how to determine and access the nodes in a model and their dependency relationships. Here we'll review and go into more detail on the topics of determining the nodes and node dependencies in a model.
+Section \@ref(sec:nodes-and-variables) defines what we mean by variables and nodes in a NIMBLE model and discusses how to determine and access the nodes in a model and their dependency relationships. Here we'll review and go into more detail on the topics of determining the nodes and node dependencies in a model.
 
 ### Determining the nodes in a model {#sec:get-nodes}
 
 
-One can determine the variables in a model using `getVarNames` and the  nodes in a model using `getNodeNames`, with optional arguments allowing you to select only certain types of nodes. We illustrate here with the pump model from Chapter @ref(cha:intro).
+One can determine the variables in a model using `getVarNames` and the  nodes in a model using `getNodeNames`, with optional arguments allowing you to select only certain types of nodes. We illustrate here with the pump model from Chapter \@ref(cha:intro).
 
 ```{r, getVarAndNodeNamesPump}
 ``` 
 
 You can see one lifted node (see next section), `lifted_d1_over_beta`, involved in a reparameterization to NIMBLE's canonical parameterization of the gamma distribution for the `theta` nodes. 
 
-We can determine the set of nodes contained in one or more nodes or variables using `expandNodeNames`, illustrated here for an example with multivariate nodes. Then`returnScalarComponents` argument also allows us to return all of the scalar elements of multivariate nodes. 
+We can determine the set of nodes contained in one or more nodes or variables using `expandNodeNames`, illustrated here for an example with multivariate nodes. The
+`returnScalarComponents` argument also allows us to return all of the scalar elements of multivariate nodes. 
 
 ```{r, expandNodeNames, message=FALSE}
 ``` 
 
 
-As discussed in Section @ref(sec:cdisdata), you can determine whether a node is flagged as data using `isData`. 
+As discussed in Section \@ref(sec:cdisdata), you can determine whether a node is flagged as data using `isData`. 
 
 ### Understanding lifted nodes {#sec:introduced-nodes}
 
@@ -58,10 +59,10 @@ generated.  These include:
   given parameter. The node is then a direct descendant of the new
   deterministic node.  This is an optional feature, but it is
   currently enabled in all cases.
-  * As discussed in Section @ref(subsec:BUGS-link), the use of link
+  * As discussed in Section \@ref(subsec:BUGS-link), the use of link
   functions causes new nodes to be introduced. This requires care if
   you need to initialize values in stochastic declarations with link functions.
-  * Use of alternative parameterizations of distributions, described in Section @ref(subsec:dists-and-functions) causes new nodes to be introduced. For
+  * Use of alternative parameterizations of distributions, described in Section \@ref(subsec:dists-and-functions) causes new nodes to be introduced. For
   example when a user provides the precision of a normal distribution
   as `tau`, NIMBLE creates a new node `sd <- 1/sqrt(tau)` and
   uses `sd` as a parameter in the normal distribution.  If many
@@ -142,7 +143,7 @@ be the name of one (stochastic) node and the name of a parameter for the
 distribution followed by that node.  The parameter does not have to be
 one of the parameters used when the node was declared.  Alternative
 parameterization values can also be obtained. See
- Section @ref(subsec:distributions) for available parameterizations.
+ Section \@ref(subsec:distributions) for available parameterizations.
 (These can also be seen in `nimble:::distributionsInputList`.) 
 
 Here is an example:
@@ -164,7 +165,7 @@ gammaModel$getParam('x','rate')
 The function `getBound` provides access to the lower and upper
 bounds of the distribution for a node. In most cases these bounds
 will be fixed based on the distribution, but for the uniform distribution
-the bounds are the parameters of the distribution, and when truncation  is used (Section @ref(subsec:trunc)), the bounds will be determined 
+the bounds are the parameters of the distribution, and when truncation  is used (Section \@ref(subsec:trunc)), the bounds will be determined 
 by the truncation. Like the functions described in the previous section, `getBound` can be
 used as  global function taking a model as the first argument, or it
 can be used as a model member function.  The next two arguments must
@@ -198,7 +199,7 @@ version of the random walk MCMC sampler.
 
 
 ## Carrying out model calculations
-  %`calculate`, `calculateDiff`, `simulate`, and `getLogProb` {#sec:cdcalc-cdsim-cdgetl}
+<!--- `calculate`, `calculateDiff`, `simulate`, and `getLogProb` -->\label{sec:cdcalc-cdsim-cdgetl}
 
 
 ### Core model operations: calculation and simulation
@@ -269,9 +270,7 @@ except that they return a value (described above) and they have no `includeData`
 
 
 ### Pre-defined nimbleFunctions for operating on model nodes: `simNodes, \cd{calcNodes`, and `getLogProbNodes`} {#sec:cdsimn-cdcalcn-cdget}
-
-% Chris would still like to revisit this -- clarify when a user might use these and where to put this text. Main question is that if these are intended as building blocks, their only use is seemingly in R. If you use in run code, you might as well just put calculate()/simulate()/etc. directly in the run code since it will call the compiled nodeFunctions anyway.
-
+<!---  Chris would still like to revisit this -- clarify when a user might use these and where to put this text. Main question is that if these are intended as building blocks, their only use is seemingly in R. If you use in run code, you might as well just put calculate()/simulate()/etc. directly in the run code since it will call the compiled nodeFunctions anyway. -->
   `simNodes`, `calcNodes` and `getLogProbNodes` are basic nimbleFunctions that simulate, calculate, or get the log probabilities
   (densities), respectively, of the same set of nodes each time they
   are called.  Each of these 
@@ -337,9 +336,7 @@ cCalcXDep$run()
  
 
 ### Accessing log probabilities via *logProb* variables {#sec:access-log-prob}
-
-% at some point we might remove this as logProb variables might be viewed as private member data, but as PdV points out, these are genuinely useful to a user because they can be added as monitors separately from the associated variable
-
+<!---  at some point we might remove this as logProb variables might be viewed as private member data, but as PdV points out, these are genuinely useful to a user because they can be added as monitors separately from the associated variable -->
 For each variable that contains at least one stochastic node, NIMBLE generates a model variable with the prefix  'logProb_'. In general users will not need to access these logProb variables directly but rather will use `getLogProb`. However, knowing they exist can be useful, in part because these variables can be monitored in an MCMC. 
 
 When the stochastic node is scalar, the
@@ -361,8 +358,8 @@ example, in
 for(i in 1:10) x[i,] ~ dmnorm(mu[], prec[,])
 ``` 
 
-`x` may be 10$\times$20 (dimensions must be provided), but `logProb_x`
-will be 10$\times$1.  For the most part you do not need to worry about
+`x` may be 10 $\times$ 20 (dimensions must be provided), but `logProb_x`
+will be 10 $\times$ 1.  For the most part you do not need to worry about
 how NIMBLE is storing the log probability values, because you can
 always get them using `getLogProb`.  
 

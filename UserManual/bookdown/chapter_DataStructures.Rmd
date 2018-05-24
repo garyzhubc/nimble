@@ -9,7 +9,7 @@ require(nimble)
 NIMBLE provides several data structures useful for programming.
 
 We'll first describe *modelValues*, which are containers designed for
-storing values for models. Then in Section @ref(sec:nimbleLists) we'll describe *nimbleLists*, which have a similar purpose to lists in R, allowing you to store heterogeneous information in a single object. 
+storing values for models. Then in Section \@ref(sec:nimbleLists) we'll describe *nimbleLists*, which have a similar purpose to lists in R, allowing you to store heterogeneous information in a single object. 
 
 modelValues can be created in either R or in nimbleFunction setup code.  nimbleLists can be created in R code, in nimbleFunction setup code, and in nimbleFunction run code, from a nimbleList definition created in R or setup code. Once created, modelValues and `nimbleLists` can then be used either in R or in nimbleFunction setup or run code.  If used in run code, they will be compiled along with the nimbleFunction.
 
@@ -27,8 +27,8 @@ modelValues with any variables one wants.
 
 As with the material in the rest of this chapter, modelValues objects
 will generally be used in nimbleFunctions that interact with models
-(see Chapter @ref(cha:progr-with-models))^[One may want to read this
-section after an initial reading of Chapter @ref(cha:progr-with-models).]. modelValues objects can
+(see Chapter \@ref(cha:progr-with-models))^[One may want to read this
+section after an initial reading of Chapter \@ref(cha:progr-with-models).]. modelValues objects can
 be defined either in setup code or separately in R (and then passed as
 an argument to setup code). The modelValues object can then used in run code of nimbleFunctions.
  
@@ -49,12 +49,9 @@ rows. As you can see, the rows are stored as elements of a list.
   
   Alternatively, one can define a modelValues object manually by first defining a modelValues *configuration* via the
   `modelValuesConf` function, and then creating an instance from that configuration, like this:
-%%   
-%%    * `vars`, which is a character vector of variable names, 
-%%      * `type`, which is a character vector of the data types for each variable (`double' for real numbers, `integer' for integers) and 
-%%        * `size`, which is a list of vectors of the sizes in each dimension of each variable. The names of the list elements must match the names provided in `vars`. 
-%% 
-
+<!--- %    -->%%    * `vars`, which is a character vector of variable names, 
+<!--- %      * `type`, which is a character vector of the data types for each variable (`double' for real numbers, `integer' for integers) and  -->%%        * `size`, which is a list of vectors of the sizes in each dimension of each variable. The names of the list elements must match the names provided in `vars`. 
+<!--- %  -->
 ```{r, mvConf}
 mvConf = modelValuesConf(vars = c('a', 'b', 'c'), 
                          type = c('double', 'int', 'double'), 
@@ -200,9 +197,7 @@ However, when you retrieve a variable from a modelValues object, the result is a
 
 
 #### Automating calculation and simulation using modelValues
-
-% At some point Chris would still  like to discuss when a user would be expected to use this (e.g., we could mention a use case), though he thinks this is more clear than simNodes/calcNodes.
-
+<!---  At some point Chris would still  like to discuss when a user would be expected to use this (e.g., we could mention a use case), though he thinks this is more clear than simNodes/calcNodes. -->
 
 The nimbleFunctions `simNodesMV`, `calcNodesMV`, and `getLogProbsMV`
 can be used to operate on a model based on rows in a modelValues object.
@@ -239,7 +234,7 @@ cGetLogProbMany$run() #
 nimbleLists provide a container for storing different types of objects in NIMBLE, similar to the list data structure in R.  Before a nimbleList can be created and used, a *definition*^[The *configuration* for a modelValues object is the same concept as a *definition* here; in a future release of NIMBLE we may make the usage more consistent between modelValues and nimbleLists.] for that nimbleList must be created that provides the names, types, and dimensions of the elements in the nimbleList.  nimbleList definitions must be created in R (either in R's global environment or in setup code), but the nimbleList
 instances can be created in run code.
 
-Unlike lists in R, nimbleLists must have the names and types of all list elements provided by a definition before the list can be used.  A nimbleList definition can be made by using the `nimbleList` function in one of two manners.  The first manner is to provide the `nimbleList` function with a series of expressions of the form `name = type(nDim)`, similar to the specification of run-time arguments to nimbleFunctions.  The types allowed for a nimbleList are the same as those allowed as run-time arguments to a nimbleFunction, described in Section @ref(sec:decl-argum-return).  For example, the following line of code creates a nimbleList definition with two elements: `x`, which is a scalar integer, and `Y`, which is a matrix of doubles.
+Unlike lists in R, nimbleLists must have the names and types of all list elements provided by a definition before the list can be used.  A nimbleList definition can be made by using the `nimbleList` function in one of two manners.  The first manner is to provide the `nimbleList` function with a series of expressions of the form `name = type(nDim)`, similar to the specification of run-time arguments to nimbleFunctions.  The types allowed for a nimbleList are the same as those allowed as run-time arguments to a nimbleFunction, described in Section \@ref(sec:decl-argum-return).  For example, the following line of code creates a nimbleList definition with two elements: `x`, which is a scalar integer, and `Y`, which is a matrix of doubles.
 ```{r, exampleDefineNimList}
  exampleNimListDef <- nimbleList(x = integer(0), Y = double(2))
 ```

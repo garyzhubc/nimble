@@ -1,4 +1,4 @@
-<!---\n% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr\n-->
+<!--- % See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr -->
 
 
 # More introduction
@@ -72,7 +72,7 @@ objects that you can control from R, simulating new data is trivial.
 With previous BUGS-based packages, this isn't possible.
 
 More information about specifying and manipulating models is in
-Chapters @ref(cha:building-models) and @ref(cha:using-bugs-models).
+Chapters \@ref(cha:building-models) and \@ref(cha:using-bugs-models).
 
 ## nimbleFunctions for writing algorithms {#sec:nimble-lang-writ}
 
@@ -121,7 +121,7 @@ What NIMBLE does with a nimbleFunction is similar to what it does
 with a BUGS model:
 
   * NIMBLE creates a working R version of the nimbleFunction.
-  This is most useful for debugging (Section @ref(sec:debugging)).
+  This is most useful for debugging (Section \@ref(sec:debugging)).
   * When you are ready, NIMBLE can generate C++ code, compile it,
   load it back into R and give you new objects that use the compiled
   C++ internally.  Again, we refer to these steps all together as 'compilation.'  The behavior of compiled nimbleFunctions is
@@ -137,7 +137,7 @@ setup function needed in run functions.  If no setup
 function is provided, the nimbleFunction corresponds to a simple
 (compilable) function rather than a class.
 
-More about writing algorithms is in Chapter @ref(cha:progr-with-models).
+More about writing algorithms is in Chapter \@ref(cha:progr-with-models).
 
 ## The NIMBLE algorithm library {#sec:nimble-algor-libr}
 
@@ -167,7 +167,5 @@ In Version `r version`, the NIMBLE algorithm library includes:
   
 
 
-
-% Someone (Perry?) added this comment: Add references where appropriate. Chris suggests we probably don't need refs here as we are referring to very widely-known algorithms.
- 
-More about the NIMBLE algorithm library is in Chapter @ref(cha:algos-provided).
+<!---  Someone (Perry?) added this comment: Add references where appropriate. Chris suggests we probably don't need refs here as we are referring to very widely-known algorithms. --> 
+More about the NIMBLE algorithm library is in Chapter \@ref(cha:algos-provided).

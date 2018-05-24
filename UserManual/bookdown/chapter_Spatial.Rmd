@@ -1,6 +1,5 @@
-<!---\n% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr\n-->%
-% Rscript -e "library(knitr);  knit2pdf('includesSpatialOnly.Rnw')"; open -a "Google Chrome" includesSpatialOnly.pdf
-%
+<!--- % See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr -->%
+<!---  Rscript -e "library(knitr);  knit2pdf('includesSpatialOnly.Rnw')"; open -a "Google Chrome" includesSpatialOnly.pdf -->%
 
 
 
@@ -38,7 +37,7 @@ compatibility with existing WinBUGS code.  NIMBLE also provides the WinBUGS name
  
 The `dcar_normal` distribution is specified for a set of `N` spatially dependent regions as:
 
-$$`x[1:N] $\sim$ dcar_normal(adj, weights, num, tau, c, zero_mean)`$$
+`x[1:N] ~ dcar_normal(adj, weights, num, tau, c, zero_mean)`
 
 The `adj`, `weights` and `num` parameters define the adjacency structure and associated weights of the spatially-dependent field.  See `help(CAR-Normal)` for details of these parameters.  When specifying a CAR distribution, these parameters must have constant values.  They do not necessarily have to be specified as `constants` when creating a model object using `nimbleModel`, but they should be defined in a static way: as right-hand-side only variables with initial values provided as `constants`, `data` or `inits`, or using fixed numerical deterministic declarations.  Each of these two approaches for specifying values are shown in the example.
 
@@ -106,8 +105,8 @@ Rmodel <- nimbleModel(code, constants, data, inits)
   
 The resulting model may be carried through to MCMC sampling.
 NIMBLE will assign a specialized sampler to the update the elements of the CAR process.
-See chapter @ref(cha:mcmc) for information about NIMBLE's MCMC engine, and section
-@ref(sec:spatial_mcmc_sampling_car) for details MCMC sampling of the CAR processes.
+See chapter \@ref(cha:mcmc) for information about NIMBLE's MCMC engine, and section
+\@ref(sec:spatial_mcmc_sampling_car) for details MCMC sampling of the CAR processes.
 
 
 
@@ -134,7 +133,7 @@ compatibility with existing WinBUGS code.  NIMBLE also provides the WinBUGS name
 
 The `dcar_proper` distribution is specified for a set of `N` spatially dependent regions as:
 
-$$`x[1:N] $\sim$ dcar_proper(mu, C, adj, num, M, tau, gamma)`$$
+`x[1:N] ~ dcar_proper(mu, C, adj, num, M, tau, gamma)`
 
 There is no option of a zero-mean constraint for proper CAR process, and instead the mean for each region is specified by the `mu` parameter.  The elements of `mu` can be assigned fixed values or may be specified using one common, or multiple, prior distributions.
 
@@ -145,11 +144,8 @@ The adjacency structure defined by `adj` must be symmetric.  That is, if region 
 Two options are available to simplify the process of constructing the `C` and `M` arguments; both options are demonstrated in the example.  First, these arguments may be omitted from the `dcar_proper` specification.  In this case, values of `C` and `M` will be generated that correspond to all weights being equal to one, or equivalently, a symmetric weight matrix containing only zeros and ones.  Note that `C` and `M` should either *both* be provided, or *both* be omitted from the specification.
 
 Second, a convenience function `as.carCM` is provided to generate the `C` and `M` arguments corresponding to a specified set of symmetric unnormalized weights.  If `weights` contains the non-zero weights corresponding to an unnormalized weight matrix (`weights` is precisely the argument that can be used in the `dcar_normal` specification), then a list containing `C` and `M` can be generated using `as.carCM(adj, weights, num)`.  In this case, the resulting `C` contains the row-normalized weights, and the resulting `M` is a vector of the inverse row-sums of the unnormalized weight matrix.  
-
-%Generating `C` to satisfy this symmetry constraint can be tedious.  NIMBLE provides a convenience function `CAR_calcC` to generate a suitable value of `C`.  Specifically, the values of the weights matrix are selected as $C_{ij} = \sqrt{\tfrac{M_{ii}}{M_{jj}}}$, which is easily seen to satisfy the constraint on `C` and `M`.  This choice is not unique, and it does impose a particular selection of the weight matrix.  The advantage of this approach is not needing to generate `C` yourself.  This approach to generating `C` is shown in the example.
-
-%The `M` parameter, giving a vector of conditional variances of each region, may be omitted from the `dcar_proper` declaration *if* the `C` parameter is provided in row-normalized form.  In this case, the $i^\text{th}$ element of `M` will be calculated as $1/n_i$, where $n_i$ is the number of neighbors of region $i$.  This choice will satisfy the symmetry constraint on `C` and `M`, and also induces the bounds on `gamma` to be $[-1, 1]$.  Note, when omitting `M`, the remaining `tau` and `gamma` parameters should be provided as named arguments.
-
+<!--- Generating `C` to satisfy this symmetry constraint can be tedious.  NIMBLE provides a convenience function `CAR_calcC` to generate a suitable value of `C`.  Specifically, the values of the weights matrix are selected as $C_{ij} = \sqrt{\tfrac{M_{ii}}{M_{jj}}}$, which is easily seen to satisfy the constraint on `C` and `M`.  This choice is not unique, and it does impose a particular selection of the weight matrix.  The advantage of this approach is not needing to generate `C` yourself.  This approach to generating `C` is shown in the example. -->
+<!--- The `M` parameter, giving a vector of conditional variances of each region, may be omitted from the `dcar_proper` declaration *if* the `C` parameter is provided in row-normalized form.  In this case, the $i^\text{th}$ element of `M` will be calculated as $1/n_i$, where $n_i$ is the number of neighbors of region $i$.  This choice will satisfy the symmetry constraint on `C` and `M`, and also induces the bounds on `gamma` to be $[-1, 1]$.  Note, when omitting `M`, the remaining `tau` and `gamma` parameters should be provided as named arguments. -->
 The scalar precision `tau` may be treated as an unknown model parameter and itself assigned a prior distribution.  Care should be taken in selecting a prior distribution for `tau`, and WinBUGS suggests that users be prepared to carry out a sensitivity analysis for this choice.
 
 An appropriate value of the `gamma` parameter ensures the propriety of the `dcar_proper` distribution.  The value of `gamma` must lie between fixed bounds, which are given by the reciprocals of the largest and smallest eigenvalues of $M^{-1/2}CM^{1/2}$.  These bounds can be calculated using the function `carBounds` or separately using the functions `carMinBound` and `carMaxBound`.  For compatibility with WinBUGS, NIMBLE provides `min.bound` and `max.bound` as aliases for `carMinBound` and `carMaxBound`.  Rather than selecting a fixed value of `gamma` within these bounds, it is recommended that `gamma` be assigned a uniform prior distribution over the region of permissible values.
@@ -225,8 +221,8 @@ Rmodel <- nimbleModel(code, constants, data, inits)
 
 Each of the resulting models may be carried through to MCMC sampling.
 NIMBLE will assign a specialized sampler to update the elements of the CAR process.
-See Chapter @ref(cha:mcmc) for information about NIMBLE's MCMC engine, and Section
-@ref(sec:spatial_mcmc_sampling_car) for details on MCMC sampling of the CAR processes.
+See Chapter \@ref(cha:mcmc) for information about NIMBLE's MCMC engine, and Section
+\@ref(sec:spatial_mcmc_sampling_car) for details on MCMC sampling of the CAR processes.
 
 
 
@@ -266,9 +262,7 @@ Regions with zero neighbors (defined by a 0 appearing in the `num` parameter) ar
 
 
 This behavior is different from that of WinBUGS, where the value of zero-neighbor regions of `car.normal` nodes is set to and fixed at zero.
-
-%Regions with zero neighbors of a `dcar_proper` distribution, in contrast, have a well-defined conditional prior, undergo sampling the same as regions with neighbors, and do contribute to the density evaluation of the subsuming `dcar_proper` node.
-
+<!--- Regions with zero neighbors of a `dcar_proper` distribution, in contrast, have a well-defined conditional prior, undergo sampling the same as regions with neighbors, and do contribute to the density evaluation of the subsuming `dcar_proper` node. -->
 
 
 

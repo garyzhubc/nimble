@@ -1,7 +1,7 @@
 --- 
-title: "A Minimal Book Example"
-author: "Yihui Xie"
-date: "`r Sys.Date()`"
+title: "NIMBLE User Manual"
+author: "NIMBLE Development Team"
+date: "Version 0.6-11"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
@@ -11,60 +11,35 @@ link-citations: yes
 github-repo: rstudio/bookdown-demo
 description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
 ---
+Problem is these next items appear after TOC
 
-```{r echo=FALSE}
+[https://R-nimble.org](https://R-nimble.org)
+
+[https://github.com/nimble-dev/nimble-docs](https://github.com/nimble-dev/nimble-docs)
+<!---
+, 'chapter_MCMC.Rmd', 'chapter_OtherAlgorithms.Rmd', 'chapter_Spatial.Rmd', 'chapter_ProgrammingOverview.Rmd', 'chapter_RCfunctions.Rmd', 'chapter_UserDefined.Rmd', 'chapter_UsingModels.Rmd', 'chapter_DataStructures.Rmd', 'chapter_WritingNimbleFunctions.Rmd']
+-->
+
+```{r echo=FALSE, include=FALSE}
 library(knitr)
 library(nimble)
 library(methods)
-#opts_chunk$set(eval = FALSE)
+opts_chunk$set(eval = TRUE)
 runMCEMs <- FALSE
-version="0.6-11"
-```
-
-
-# Prerequisites {#foo}
-
-\@ref(foo)
-
-This is a _sample_ book written in **Markdown**. You can use anything that Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
-
-The **bookdown** package can be installed from CRAN or Github:
-
-```{r eval=FALSE}
-install.packages("bookdown")
-# or the development version
-# devtools::install_github("rstudio/bookdown")
-```
-
-Remember each Rmd file contains one and only one chapter, and a chapter is defined by the first-level heading `#`.
-
-To compile this example to PDF, you need XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): <https://yihui.name/tinytex/>.
-
-```{r include=FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown'
-), 'packages.bib')
+#version="0.6-11"
 ```
 
 
 <!--chapter:end:index.Rmd-->
 
-<!---\n% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr\n-->
+# (PART) Part I {Introduction} 
+
+<!--chapter:end:part1.md-->
+
+<!--- % See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr -->
+
 
 # Welcome to NIMBLE {#sec:welcome-nimble}
-
-See  \\@ref(sec:what-is-nimble)  @ref(#sec:what-is-nimble)  \@ref(sec:what-is-nimble)
-
-  Name          Usage                                     Density                                 Lower Upper
-  ------------- ----------------------------------------- --------------------------------------- ----- -----  
-  Bernoulli     `dbern(prob = p)`                         $p^x (1 - p)^{1 -x}$                    $0$   $1$ 
-                $0 < p < 1$\
-  Beta          `dbeta(shape1 = a,`                       $\frac{x^{a-1}(1-x)^{b-1}}{\beta(a,b)}$ $0$   $1$  
-                `shape2 = b)`, $a > 0$, $b > 0$
-  Binomial      `dbin(prob = p, size = n)`                ${n \choose x} p^x (1-p)^{n-x}$           $0$   $n$
-                $0 < p < 1$, $n \in \mathbb{N}^*$
-
 
 NIMBLE is a system for building and sharing analysis methods for
 statistical models from R, especially for hierarchical models and
@@ -107,7 +82,7 @@ You can think of NIMBLE as comprising four pieces:
 
   * A system for writing statistical models flexibly, which is an
   extension of the BUGS language^[See Chapter
-    \@ref(sec:what-is-nimble) for information about NIMBLE's version of
+    \@ref(cha:writing-models) for information about NIMBLE's version of
     BUGS.].
   * A library of algorithms such as MCMC.
   * A language, called NIMBLE, embedded within and similar in style
@@ -138,26 +113,272 @@ written in the NIMBLE language.
 
 ## How to use this manual
 
-We suggest everyone start with the Lightning Introduction in Chapter @ref(cha:intro).
+We suggest everyone start with the Lightning Introduction in Chapter \@ref(cha:intro).
 
 Then, if you want to jump into using NIMBLE's algorithms without learning
-about NIMBLE's programming system, go to Part @ref(part:models) to
-learn how to build your model and Part @ref(part:algorithms) to learn
+about NIMBLE's programming system, go to Part \@ref(part:models) to
+learn how to build your model and Part \@ref(part:algorithms) to learn
 how to apply NIMBLE's built-in algorithms to your model.
 
 If you want to learn about NIMBLE programming (nimbleFunctions), go to Part
-@ref(part:programming). This teaches how to program user-defined
+\@ref(part:programming). This teaches how to program user-defined
 function or distributions to use in BUGS code, compile your R code for
 faster operations, and write algorithms with NIMBLE. These algorithms
 could be specific algorithms for your particular model (such as a
 user-defined MCMC sampler for a parameter in your model) or general
 algorithms you can distribute to others. In fact the algorithms
-provided as part of NIMBLE and described in Part @ref(part:algorithms)
+provided as part of NIMBLE and described in Part \@ref(part:algorithms)
 are written as nimbleFunctions.
 
 <!--chapter:end:chapter_WelcomeToNimble.Rmd-->
 
-<!---\n% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr\n-->
+<!--- % See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr -->
+
+
+
+```{r, chunk-LIinit, echo = FALSE}
+## source the code
+read_chunk(file.path('chunks', 'introExample_chunks.R'))  # one can put code chunks here if one wants
+``` 
+
+
+# Lightning introduction {#cha:intro}
+
+## A brief example {#sec:brief-example}
+
+Here we'll give a simple example of building a model and running some algorithms on the model, as well as creating our own user-specified algorithm. The goal is to give you a sense for what one can do in the system. Later sections will provide more detail.
+
+We'll use the *pump* model example from BUGS^[The data set
+  describes failure rates of some pumps.].  We could load the model
+from the standard BUGS example file formats (Section \@ref(sec:readBUGSmodel)), but instead we'll show
+how to enter it directly in R.
+
+In this 'lightning introduction' we will:
+
+
+  * Create the model for the pump example.
+  * Compile the model.
+  * Create a basic MCMC configuration for the pump model.
+  * Compile and run the MCMC
+  * Customize the MCMC configuration and compile and run that.
+  * Create, compile and run a Monte Carlo Expectation Maximization (MCEM)
+  algorithm, which illustrates some of the flexibility NIMBLE
+  provides to combine R and NIMBLE.
+  * Write a short `nimbleFunction` to generate simulations from
+  designated nodes of any  model.
+
+
+
+## Creating a model {#sec:creating-model}
+First we define the model code, its constants, data, and initial
+values for MCMC.
+
+```{r, inputPump}
+``` 
+
+Here `x[i]` is the number of failures recorded during a time
+duration of length `t[i]` for the `i`$^{th}$ pump.
+`theta[i]` is a failure rate, and the goal is estimate parameters
+`alpha` and `beta`.  Now let's create the model and look at some of its nodes.
+
+```{r, explorePump}
+``` 
+
+
+Notice that in the list of nodes, NIMBLE has introduced a new node,
+`lifted_d1_over_beta`. We call this a 'lifted' node. Like R,
+NIMBLE allows alternative parameterizations, such as the scale or rate
+parameterization of the gamma distribution. Choice of parameterization
+can generate a lifted node, as can using a link function or a
+distribution argument that is an expression. It's helpful to know why
+they exist, but you shouldn't need to worry about them.
+
+Thanks to the plotting capabilities of the `igraph` package that
+NIMBLE uses to represent the directed acyclic graph, we can plot the
+model  (Figure 2.1).
+
+```{r, plotPump, fig.cap="Directed Acyclic Graph plot of the pump model, thanks to the igraph package"}
+``` 
+
+You are in control of the model.  By default, `nimbleModel` does
+its best to initialize a model, but let's say you want to
+re-initialize `theta`.  To simulate from the prior for `theta` (overwriting the
+initial values previously in the model) we first need to be sure the
+parent nodes of all `theta[i]` nodes are fully initialized, including any non-stochastic nodes such
+as lifted nodes.  We then use the `simulate` function to simulate
+from the distribution for `theta`.  Finally we use the
+`calculate` function to 
+calculate the dependencies of `theta`, namely `lambda` and the
+log probabilities of `x` to ensure all parts of the
+model are up to date.  First we show how
+to use the model's `getDependencies` method to query information
+about its graph.
+<!---  TODO: the logic here is a bit weird - we say we want to know all parents of theta are initialized by our code actually finds dependencies of alpha+beta not parents of theta -->
+```{r, manipPump}
+"
+``` 
+
+Notice that the first `getDependencies` call returned dependencies
+from `alpha` and `beta` down to the next stochastic nodes in the
+model.  The second call requested only deterministic dependencies.
+The call to `pump$simulate("theta")`
+expands `"theta"` to include all nodes in `theta`.  After
+simulating into `theta`, we can see that `lambda` and the log
+probabilities of `x` still reflect the old values of `theta`, so
+we `calculate` them and then see that they have been updated.
+
+## Compiling the model {#sec:compiling-model}
+
+Next we compile the model, which means generating C++ code, compiling
+that code, and loading it back into R with an object that can be used just
+like the uncompiled model. The values in the compiled model will be
+initialized from those of the original model in R, but
+the original and compiled models are distinct objects so any
+subsequent changes in one will not be reflected in the other.
+
+```{r, compilePump}
+``` 
+
+Note that the compiled model is used when running any NIMBLE algorithms via C++, so the model needs to be compiled before (or at the same time as) any compilation of algorithms, such as the compilation of the MCMC done in the next section.
+
+## One-line invocation of MCMC {#sec:intro-runMCMC}
+
+The most direct approach to invoking NIMBLE's MCMC engine is using the
+`nimbleMCMC` function.  This function would generally take the code,
+data, constants, and initial values as input, but it can also accept the (compiled or uncompiled)
+model object as an argument. It provides a variety of options for executing and
+controlling multiple chains of NIMBLE's default MCMC algorithm, and
+returning posterior samples, posterior summary statistics,
+and/or WAIC values.
+
+For example, to execute two MCMC chains of 10,000 samples each, and
+return samples, summary statistics, and WAIC values:
+
+```{r, nimbleMCMCpump}
+``` 
+
+See Section \@ref(sec:nimbleMCMC) or `help(nimbleMCMC)` for more
+details about using `nimbleMCMC`.
+
+
+## Creating, compiling and running a basic MCMC configuration {#sec:creating-mcmc}
+  
+At this point we have initial values for all of the nodes in the model,
+and we have both the original and compiled versions of the model. As a first algorithm
+to try on our model, let's use NIMBLE's default MCMC. Note that conjugate relationships are detected for all nodes except for
+`alpha`, on which the default sampler is a random walk Metropolis sampler.
+<!--- ^[We haven't set up conjugate relationships for an -->%  exponential yet.]
+<!---  footnote is true but not relevant as there is not a conj relationship for alpha in a gamma-distributed dependency -->
+```{r, mcmcPump, fig.height=2.5}
+``` 
+
+Notice the posterior correlation between `alpha` and `beta`.
+A measure of the mixing for each is the 
+autocorrelation for each parameter, shown by the `acf` plots. 
+
+## Customizing the MCMC {#sec:customizing-mcmc}
+
+Let's add an adaptive
+block sampler on `alpha` and `beta` jointly and see if that
+improves the mixing. 
+
+```{r, mcmcPump2, fig.height=2.5}
+``` 
+
+We can see that the block sampler has decreased the 
+autocorrelation for both `alpha` and `beta`.  Of course these
+are just short runs, and what we are really interested in is the
+effective sample size of the MCMC per computation time, but that's not
+the point of this example.
+
+Once you learn the MCMC system, you can write your own samplers and
+include them.  The entire system is written in nimbleFunctions.
+
+## Running MCEM {#sec:running-mcem}
+
+NIMBLE is a system for working with algorithms, not just an MCMC engine. So let's try maximizing the marginal likelihood for `alpha` and `beta` using Monte Carlo Expectation Maximization^[Note that for this model, one could analytically integrate over `theta` and then numerically maximize the resulting marginal likelihood.]. 
+
+```{r, mcemPump, eval = runMCEMs, echo = runMCEMs}
+``` 
+```{r, dont-run-mcemPump, eval = !runMCEMs, echo = !runMCEMs}
+``` 
+
+Both estimates are within 0.01 of the values reported by
+[@George_Makov_Smith_1993]^[Table 2 of the paper accidentally swapped the two estimates.]. %^[George, E.I., Makov, U.E. \& Smith,
+<!---   A.F.M. 1993. Conjugate likelihood --> % distributions. *Scand. J. Statist.* \textbf{20]:147-156.
+<!---  Their numbers were accidentally swapped in Table 2.}.   -->Some discrepancy is to be expected since it is a Monte Carlo algorithm.
+
+## Creating your own functions {#sec:creating-your-own}
+
+
+
+Now let's see an example of writing our own algorithm and using it on
+the model. We'll do something simple: simulating multiple values for a
+designated set of nodes and calculating every part of the model that
+depends on them. More details on programming in NIMBLE are in Part \@ref(part:programming).
+
+Here is our *nimbleFunction*:
+```{r, nfPump}
+``` 
+
+Here are a few things to notice about the nimbleFunction.
+
+  * The `setup` function is written in R.  It creates relevant
+  information specific to our model for use in the run-time code.  
+  * The `setup` code creates a *modelValues* object to hold multiple sets of
+  values for variables  in the model provided.
+  * The `run` function is written in NIMBLE.  It carries out the
+  calculations using the information determined once for each set of
+  `model` and `nodes` arguments by the setup
+  code. The run-time code is what will be compiled.
+  * The `run` code requires type information about the argument
+  `n`.  In this case it is a scalar integer.  
+  * The for-loop looks just like R, but only sequential integer
+  iteration is allowed.
+  * The functions `calculate` and `simulate`, which were
+  introduced above in R, can be used in NIMBLE.
+  * The special function `copy` is used here to record values
+  from the model into the modelValues object.  
+  * Multiple instances, or 'specializations', can be made by
+  calling `simNodesMany` with different arguments.  Above, `simNodesTheta1to5` has
+  been made by calling `simNodesMany` with the `pump` model and
+  nodes `"theta[1:5]"` as inputs to
+  the `setup` function, while `simNodesTheta6to10` differs by
+  providing `"theta[6:10]"` as an argument.  The returned objects
+  are objects of a uniquely
+  generated R reference class with fields (member data) for the results of the
+  `setup` code and a `run` method (member function). 
+<!---  Arbitrary other methods can be provided with a `methods` argument, following the syntax of R's `setRefClass` function. -->  % NOTE: CJP removed previous sentence as I think it is too involved for the lightning intro - CJP
+
+
+By the way, `simNodesMany` is very similar to a standard
+`nimbleFunction` provided with nimble, `simNodesMV`.
+
+Now let's execute this nimbleFunction in R, before compiling it.
+
+```{r, runPumpSimsR}
+``` 
+
+In this code we have initialized the values of `alpha` and `beta`
+to their MLE and then recorded the `theta` values to use below.  Then we
+have requested 10 simulations from
+`simNodesTheta1to5`.  Shown are the first two simulation results
+for `theta` and the log probabilities of `x`.  Notice that
+`theta[6:10]` and the corresponding log probabilities for `x[6:10]` are unchanged because the nodes being simulated are only
+`theta[1:5]`.  In R, this function runs slowly.
+
+Finally, let's compile the function and run that version.
+
+```{r, runPumpSimsC}
+``` 
+
+Given the same initial values and the same random number generator
+seed, we got identical results for `theta[1:5]` and their dependencies, but it happened much faster.
+
+
+<!--chapter:end:chapter_LightningIntroduction.Rmd-->
+
+<!--- % See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr -->
 
 
 # More introduction
@@ -231,7 +452,7 @@ objects that you can control from R, simulating new data is trivial.
 With previous BUGS-based packages, this isn't possible.
 
 More information about specifying and manipulating models is in
-Chapters @ref(cha:building-models) and @ref(cha:using-bugs-models).
+Chapters \@ref(cha:building-models) and \@ref(cha:using-bugs-models).
 
 ## nimbleFunctions for writing algorithms {#sec:nimble-lang-writ}
 
@@ -280,7 +501,7 @@ What NIMBLE does with a nimbleFunction is similar to what it does
 with a BUGS model:
 
   * NIMBLE creates a working R version of the nimbleFunction.
-  This is most useful for debugging (Section @ref(sec:debugging)).
+  This is most useful for debugging (Section \@ref(sec:debugging)).
   * When you are ready, NIMBLE can generate C++ code, compile it,
   load it back into R and give you new objects that use the compiled
   C++ internally.  Again, we refer to these steps all together as 'compilation.'  The behavior of compiled nimbleFunctions is
@@ -296,7 +517,7 @@ setup function needed in run functions.  If no setup
 function is provided, the nimbleFunction corresponds to a simple
 (compilable) function rather than a class.
 
-More about writing algorithms is in Chapter @ref(cha:progr-with-models).
+More about writing algorithms is in Chapter \@ref(cha:progr-with-models).
 
 ## The NIMBLE algorithm library {#sec:nimble-algor-libr}
 
@@ -326,10 +547,8 @@ In Version `r version`, the NIMBLE algorithm library includes:
   
 
 
-
-% Someone (Perry?) added this comment: Add references where appropriate. Chris suggests we probably don't need refs here as we are referring to very widely-known algorithms.
- 
-More about the NIMBLE algorithm library is in Chapter @ref(cha:algos-provided).
+<!---  Someone (Perry?) added this comment: Add references where appropriate. Chris suggests we probably don't need refs here as we are referring to very widely-known algorithms. --> 
+More about the NIMBLE algorithm library is in Chapter \@ref(cha:algos-provided).
 
 <!--chapter:end:chapter_MoreIntroduction.Rmd-->
 
@@ -511,7 +730,7 @@ of how this can be used and what it can contain.
 
 <!--chapter:end:chapter_InstallingNimble.Rmd-->
 
-<!---\n% See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr\n-->
+<!--- % See http://yihui.name/knitr/demo/child/ for documentation on the parent/child document system of knitr -->
 
 
 ```{r, echo=FALSE}
@@ -520,16 +739,11 @@ require(nimble)
 
 # Writing models in NIMBLE's dialect of BUGS {#cha:writing-models}
 
-\@ref{cha:writing-models} \@ref{writing-models}
-
 Models in NIMBLE are written using a variation on the BUGS language.
 From BUGS code, NIMBLE  creates a model object.  This chapter
 describes NIMBLE's version of BUGS.  The next chapter explains how to
 build and manipulate model objects.
-
-
-% With NIMBLE you can also define your own distributions and functions for use in BUGS code; discussion of this functionality is deferred to Chapter \@ref(cha:user-defined) as it requires the use of nimbleFunctions. 
-
+<!---  With NIMBLE you can also define your own distributions and functions for use in BUGS code; discussion of this functionality is deferred to Chapter \@ref(cha:user-defined) as it requires the use of nimbleFunctions.  -->
 
 ## Comparison to BUGS dialects supported by WinBUGS, OpenBUGS and JAGS {#sec:supp-feat-bugs}
 
@@ -798,33 +1012,11 @@ those of BUGS^[Note that the same distributions are available
 parameterizations for a variety of distributions as described next.
 See Section \@ref(sec:user-distributions) to learn how to write new distributions using nimbleFunctions.
 
-  Name          Usage                                     Density                                 Lower Upper
-  ------------- ----------------------------------------- --------------------------------------- ----- -----
-  Bernoulli     `dbern(prob = p)`                         $p^x (1 - p)^{1 -x}$                    $0$   $1$
-                $0 < p < 1$
-  Beta          `dbeta(shape1 = a,`                       $\frac{x^{a-1}(1-x)^{b-1}}{\beta(a,b)}$   $0$   $1$
-                `shape2 = b)`, $a > 0$, $b > 0$
-  Binomial      `dbin(prob = p, size = n)`                ${n \choose x} p^x (1-p)^{n-x}$           $0$   $n$
-                $0 < p < 1$, $n \in \mathbb{N}^*$
-  Intrinsic     `dcar_normal(adj, weights,`               see chapter 9 for details
-  CAR           `num, tau, c, zero_mean`
-  Categorical   `dcat(prob = p)`                          $\frac{p_x}{\sum_i p_i}$                  $1$   $N$
-  Chi-square    `dchisq(df = k)`                          $7$          $0$ 
-                $k > 0$
-  Dirichlet     `ddirch(alpha = `$alpha$`)`               $8$       $0$                        
-                $\alpha_j \geq 0$
-  Exponential   `dexp(rate = `$\lambda$`)`                $\lambda \exp(-\lambda x)$                $0$
-                $\lambda > 0$
-  Flat          `dflat()`                                 $\propto 1$ (improper)                  
-  Gamma         `dgamma(shape = r, rate = `$\lambda$`)`   $9$       $0$
-                $\lambda > 0$, $r > 0$
-  Half flat     `dhalfflat()`                              $\propto 1$ (improper)                    $0$
+```{r, child = 'densityTableLong.md'}
+```
 
-$\frac{x^{\frac{k}{2}-1} \exp(-x/2)}{2^{\frac{k}{2}}\Gamma(\frac{k}{2})}$
-$\Gamma(\sum_i \alpha_i) \prod_j \frac{ x_j^{\alpha_j - 1}}{ \Gamma(\alpha_j)}$
- 
- 
-\paragraph{Improper distributions}
+
+##### Improper distributions
 
 Note that `dcar_normal`, `dflat` and `dhalfflat` specify improper prior distributions
 and should only be used when the posterior distribution of the model is known to be proper.
@@ -866,36 +1058,34 @@ but it need not.  If names are given, they can be given in any
 order.  NIMBLE knows that rate is an alternative to scale and that
 (mean, sd) are an alternative to (shape, scale or rate). 
 
+```{r, child = 'parameterizationTableLong.md'}
+```
 
 Note that for multivariate normal, multivariate t, Wishart, and Inverse Wishart, the canonical
 parameterization uses the Cholesky decomposition of one of the
 precision/inverse scale or covariance/scale matrix. For example, for the multivariate normal, if  `prec_param=TRUE`, the `cholesky` argument is treated as the Cholesky
 decomposition of a precision matrix.  Otherwise it is treated as the
 Cholesky decomposition of a covariance matrix. 
-
-% In some cases it may be more efficient to use that parameterization
-% directly.  % PdV removed this because it is obtuse: In what cases?
-% Doesn't lifting of the cholesky computation take care of inefficiency?
-% What does "use that parameterization directly" mean, when there is
-% no meaning of "indirect" use of a parameterization?  
-
+<!---  In some cases it may be more efficient to use that parameterization -->% directly.  % PdV removed this because it is obtuse: In what cases?
+<!---  Doesn't lifting of the cholesky computation take care of inefficiency? -->% What does "use that parameterization directly" mean, when there is
+<!---  no meaning of "indirect" use of a parameterization?   -->
 In addition, NIMBLE supports alternative distribution names, known as aliases, as in JAGS, as specified in Table \@ref(table:distributions-aliases). 
 
 
+```{r, child = 'densityAliasesTable.md'}
+```
 
-%TODO: WHAT IS THE STATUS OF THE NEXT STATEMENT?: I've added inverse gamma in 0.6-4 and will do inverse wishart in 0.6-5. Hopefully will get to some others as well soon-ish - CJP.
 
+<!--- TODO: WHAT IS THE STATUS OF THE NEXT STATEMENT?: I've added inverse gamma in 0.6-4 and will do inverse wishart in 0.6-5. Hopefully will get to some others as well soon-ish - CJP. -->
 We plan to, but do not currently, include the following distributions as part of core NIMBLE: double exponential (Laplace), beta-binomial, Dirichlet-multinomial, F, Pareto, or forms of the multivariate t other than the standard one provided. 
-% [F is easy to add as it has R functions]
-
+<!---  [F is easy to add as it has R functions] -->
 
 
 ### Available BUGS language functions {#subsec:BUGS-lang-fxns}
 
 Tables \@ref(table:functions-bugs)-\@ref(table:functions-matrix-bugs) show the
 available operators and functions. 
-% These are also available for `nimbleFunction` programming (see Chapter \@ref(cha:progr-with-models)).  In fact, BUGS model nodes are implemented as `nimbleFunction`s that are custom-generated from BUGS declarations, so it would be more correct to say that functions and operators available for `nimbleFunction`s are also available for the model declarations.
-Support for more general R expressions
+<!---  These are also available for `nimbleFunction` programming (see Chapter \@ref(cha:progr-with-models)).  In fact, BUGS model nodes are implemented as `nimbleFunction`s that are custom-generated from BUGS declarations, so it would be more correct to say that functions and operators available for `nimbleFunction`s are also available for the model declarations. -->Support for more general R expressions
 is covered in Chapter \@ref(cha:RCfunctions) about programming
 with nimbleFunctions. 
 
@@ -905,31 +1095,33 @@ by NIMBLE are also listed. Note that we provide distribution functions
 for use in calculations, namely the 'p', 'q', and 'd' functions.
  See Section \@ref(sec:nimble-dist-funs) for details on the syntax for using distribution functions as functions in deterministic calculations, as only some parameterizations are allowed and the names of some distributions differ from those used to define stochastic nodes in a model. 
 
-% TODO: CJP moved this material to Chap 9 - that's where it is most relevant 
-% so I thought it best to go into the caveats there
-%Currently 'r' functions only return one random
-%draw at a time, and the first argument must always be 1.  For
-%multivariate distribution functions the `prec_param` or
-%`scale_param` argument must be provided, indicating when a
-%covariance or precision matrix has been given.  In a future release we
-%will provide a variety of distribution functions, including density,
-%cumulative distribution and quantile functions, using the same syntax
-%as `dnorm`, `pnorm`, `qnorm`.  We will also extend the
-%alternative parameterizations with named parameters to
-%`nimbleFunctions`.
+```{r, child = 'functionTableLong.md'}
+```
 
 
+```{r, child = 'functionTableMatrixLong.md'}
+```
+```{r, child = 'eigenSvdTableMatrixElements.md'}
+```
 
 
-% [NOTE: JAGS source package has the Tex files for Martyn's manual, so we can copy the table formatting - s doc/manual/jags_user_manual.md]
-
+<!---  [NOTE: JAGS source package has the Tex files for Martyn's manual, so we can copy the table formatting - s doc/manual/jags_user_manual.md] -->
 See Section \@ref(sec:user-functions) to learn how to use nimbleFunctions to write new functions for use in BUGS code.
 
 ### Available link functions {#subsec:BUGS-link}
 
 NIMBLE allows the link functions listed in Table \@ref(table:links).
+<!--- [!h] 
+`r version`b+cloglog(y) <- x+ & Complementary log log & $0 < y < 1$ & `r version`b+y <- icloglog(x)+ 
 
-      
+`r version`b+log(y) <- x+    & Log           & $0 < y$ &  `r version`b+y <- exp(x)+ 
+
+`r version`b+logit(y) <- x+  & Logit         & $0 < y < 1$ &  `r version`b+y <- expit(x)+ 
+
+`r version`b+probit(y) <- x+ & Probit        & $0 < y < 1$ &  `r version`b+y <- iprobit(x)+
+-->
+
+<!---  -->      
 Link functions are specified as functions applied to a node on the
 left hand side of a BUGS expression. To handle link functions in
 deterministic declarations, NIMBLE converts the declaration into an
@@ -964,7 +1156,9 @@ Either of the following forms,
 
 Truncation means the possible values of `x` are limited a priori, hence the probability density of `x` must be normalized^[NIMBLE uses the CDF and inverse CDF (quantile) functions of a distribution to do this; in some cases if one uses truncation to include only the extreme tail of a distribution, numerical difficulties can arise.].  In this example it would be the normal probability density divided by its integral from 0 to `a`.  Like JAGS, NIMBLE also provides `I` as a synonym for `T` to accommodate older BUGS code, but `T` is preferred because it disambiguates multiple usages of `I` in BUGS.
 
-#### Censoring Censoring refers to the situation where one datum gives the lower or upper bound on an unobserved random variable.  This is common in survival analysis, when for an individual still surviving at the end of a study, the age of death is not known and hence is 'censored' (right-censoring).  NIMBLE adopts JAGS syntax for censoring, as follows (using right-censoring as an example):
+#### Censoring
+
+Censoring refers to the situation where one datum gives the lower or upper bound on an unobserved random variable.  This is common in survival analysis, when for an individual still surviving at the end of a study, the age of death is not known and hence is 'censored' (right-censoring).  NIMBLE adopts JAGS syntax for censoring, as follows (using right-censoring as an example):
  ```{r, dinterval-example, eval=FALSE}
 censored[i] ~ dinterval(t[i], c[i])
 t[i] ~ dweib(r, mu[i])
@@ -980,15 +1174,15 @@ below the observed times for uncensored entries (e.g., `0`, assuming `t[i] $>$ 0
 
 The `dinterval` is not really a distribution but rather a trick: in the above example when `censored[i] = 1` it gives a 'probability' of 1 if `t[i] $>$ c[i]` and 0 otherwise.  This means that `t[i] $\le$ c[i]` is treated as impossible.  More generally than simple right- or left-censoring, `censored[i] $\sim$ dinterval(t[i], c[i, ])` is defined such that for a vector of increasing cutpoints, `c[i, ]`, `t[i]` is enforced to fall within the `censored[i]`-th cutpoint interval.  This is done by setting data `censored[i]` as follows:
 
-\mbox{`censored[i] = 0`} & \mbox{if} & \mbox{`t[i] $\le$ c[i, 1]`} \nonumber n
-\mbox{`censored[i] = m`} & \mbox{if} & \mbox{`c[i, m] $<$ t[i] $\le$ c[i, m+1]` for } 1 <= m <= M \nonumber n
+\mbox{`censored[i] = 0`} & \mbox{if} & \mbox{`t[i] $\le$ c[i, 1]`} \nonumber 
+
+\mbox{`censored[i] = m`} & \mbox{if} & \mbox{`c[i, m] $<$ t[i] $\le$ c[i, m+1]` for } 1 <= m <= M \nonumber 
+
 \mbox{`censored[i] = M`} & \mbox{if} & \mbox{`c[i, M] $<$ t[i]`}.\nonumber
 
 (The `i` index is provided only for consistency with the previous example.)  The most common uses of `dinterval` will be for left- and right-censored data, in which case `c[i,]` will be a single value (and typically given as simply `c[i]`), and for interval-censored data, in which case `c[i,]` will be a vector of two values.  
-% TODO: Next line removed by CJP as I thought it was confusing:
-% or `x[i] $\sim$ dinterval(c[i], t[i])` with `x[i]` set to 1.
-% WHY - our dinterval code treats the 2nd arg as possibly a vector - the above presumably works for scalars but I think it is clearer if we always use the first arg as the data value and the 2nd as the interval points
-
+<!---  TODO: Next line removed by CJP as I thought it was confusing: -->% or `x[i] $\sim$ dinterval(c[i], t[i])` with `x[i]` set to 1.
+<!---  WHY - our dinterval code treats the 2nd arg as possibly a vector - the above presumably works for scalars but I think it is clearer if we always use the first arg as the data value and the 2nd as the interval points -->
 Nodes following a `dinterval` distribution should normally be set
 as `data` with known values. Otherwise, the node may be simulated during initialization in some algorithms (e.g., MCMC) and thereby establish a permanent, perhaps unintended, constraint.  
 
@@ -1006,13 +1200,9 @@ constraint_data ~ dconstraint( mu1 + mu2 > 0 )
 with `constraint_data` set (as `data`) to 1.  This is
 equivalent to a half-normal distribution on the half-plane $\mu_1 +
 \mu_2 > 0$.  Nodes following `dconstraint` should be provided as data for the same reason of avoiding unintended initialization described above for `dinterval`.
-
-%If one simulates from the model using the `simulate` functions and the condition is not satisfied, then `const` will be 0 and the log probability of `const` (and therefore of the model as whole) will be $-\infty$.
-
+<!--- If one simulates from the model using the `simulate` functions and the condition is not satisfied, then `const` will be 0 and the log probability of `const` (and therefore of the model as whole) will be $-\infty$. -->
 Formally, `dconstraint(cond)` is a probability distribution on $\left\{ 0, 1 \right\}$ such that $P(1) = 1$ if `cond` is `TRUE` and $P(0) = 1$ if `cond` is `FALSE`. 
-
-% TODO: Chris thought this wording is confusing:
-%Like `dinterval`, `dconstraint` results in distributions that are not normalized (e.g. for (`mu1`, `mu2`)), which makes most sense if the constraint is observed rather than established a priori. 
+<!---  TODO: Chris thought this wording is confusing: -->%Like `dinterval`, `dconstraint` results in distributions that are not normalized (e.g. for (`mu1`, `mu2`)), which makes most sense if the constraint is observed rather than established a priori. 
 
 Of course, in many cases, parameterizing the model so that the
 constraints are automatically respected may be a better strategy than
@@ -1023,7 +1213,7 @@ parameters). For such restrictive constraints, general purpose
 algorithms that are not tailored to the constraints may fail or be inefficient. If constraints are used, it will generally be wise to ensure the model is initialized with values that satisfy them.
 
 
-\paragraph{Ordering}
+##### Ordering
 
 To specify an ordering of parameters, such as $\alpha_1 <= \alpha_2 <= \alpha_3$ one can use `dconstraint` as follows: 
 ```{r, ordering-example, eval=FALSE}
@@ -1037,8 +1227,7 @@ alpha[2] ~ dnorm(0, 1) I(alpha[1], alpha[3])
 alpha[3] ~ dnorm(0, 1) I(alpha[2], )
 
 as this does not represent a directed acyclic graph. 
-% TODO: CHRIS, WOULDN'T THIS WORK WITH `alpha[1] $\sim$ dnorm(0, 1)`?  DOES BUGS REALLY ALLOW THIS NON-DAG?
-% PERRY, JAGS manual indicates the above is allowed in BUGS. Are you asking if it would work in NIMBLE with alpha1~dnorm(0,1) -- no because alpha2 still depends on alpha3 and vice versa
+<!---  TODO: CHRIS, WOULDN'T THIS WORK WITH `alpha[1] $\sim$ dnorm(0, 1)`?  DOES BUGS REALLY ALLOW THIS NON-DAG? -->% PERRY, JAGS manual indicates the above is allowed in BUGS. Are you asking if it would work in NIMBLE with alpha1~dnorm(0,1) -- no because alpha2 still depends on alpha3 and vice versa
 
 Also note that specifying prior ordering using `T(,)` can result in possibly unexpected results.  For example:
 

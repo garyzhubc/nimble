@@ -4,4 +4,6 @@ language:
     chapter_name: "Chapter "
 delete_merged_file: true
 number_sections: true
-rmd_files: ["index.Rmd", "chapter_WelcomeToNimble.Rmd", "chapter_MoreIntroduction.Rmd", "chapter_InstallingNimble.Rmd", "chapter_WritingModels.Rmd"]
+toc_depth: 3
+rmd_files: ["index.Rmd", 'part1.md', 'chapter_WelcomeToNimble.Rmd', 'chapter_LightningIntroduction.Rmd', 'chapter_MoreIntroduction.Rmd', 'chapter_InstallingNimble.Rmd', 'chapter_WritingModels.Rmd']
+

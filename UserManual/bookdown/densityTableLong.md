@@ -1,17 +1,21 @@
-  Name          Usage                                     Density                                 Lower Upper
-  ------------- ----------------------------------------- --------------------------------------- ----- -----    
-  Bernoulli     `dbern(prob = p)`                         $p^x (1 - p)^{1 -x}$                    $0$   $1$ 
-                $0 < p < 1$\
-  Beta          `dbeta(shape1 = a,`                       $\frac{x^{a-1}(1-x)^{b-1}}{\beta(a,b)}$   $0$   $1$    
+Table: (#tab:distributions) Distributions with their default order of parameters. The value of the random variable
+is denoted by `x`.
+
+  Name          Usage                                     Density                                                                             Lower Upper
+  ------------- ----------------------------------------- ----------------------------------------------------------------------------------- ----- -----    
+  Bernoulli     `dbern(prob = p)`                         $p^x (1 - p)^{1 -x}$                                                                $0$   $1$ 
+                $0 < p < 1$
+  Beta          `dbeta(shape1 = a,`                       $\frac{x^{a-1}(1-x)^{b-1}}{\beta(a,b)}$                                             $0$   $1$    
                 `shape2 = b)`, $a > 0$, $b > 0$
-  Binomial      `dbin(prob = p, size = n)`                ${n \choose x} p^x (1-p)^{n-x}$           $0$   $n$
+  Binomial      `dbin(prob = p, size = n)`                ${n \choose x} p^x (1-p)^{n-x}$                                                     $0$   $n$
                 $0 < p < 1$, $n \in \mathbb{N}^*$
-  Intrinsic     `dcar\_normal(adj, weights,`               see chapter 9 for details
+  Intrinsic     `dcar\_normal(adj, weights,`              see chapter 9 for details
   CAR           `num, tau, c, zero\_mean`
-  Categorical   `dcat(prob = p)`                          $\frac{p_x}{\sum_i p_i}$                  $1$   $N$ 
+  Categorical   `dcat(prob = p)`                          $\frac{p_x}{\sum_i p_i}$                                                            $1$   $N$ 
                 $p \in (\mathbb{R}^+)^N$
-  Chi-square    `dchisq(df = k)`                          $\frac{x^{\frac{k}{2}-1} \exp(-x/2)}{2^{\frac{k}{2}}\Gamma({\frac{k}{2}})}$          $0$ 
+  Chi-square    `dchisq(df = k)`                          $\frac{x^{\frac{k}{2}-1} \exp(-x/2)}{2^{\frac{k}{2}}\Gamma(\frac{k}{2})}$           $0$ 
                 $k > 0$
+<!---
   Dirichlet     `ddirch(alpha = $alpha$)`                 $\Gamma(\sum_i \alpha_i) \prod_j \frac{ x_j^{\alpha_j - 1}}{ \Gamma(\alpha_j)}$     $0$                                      
                 $\alpha_j \geq 0$
   Exponential   `dexp(rate = `$\lambda$`)`                $\lambda \exp(-\lambda x)$                $0$
@@ -49,4 +53,4 @@
                 $R p \times p$ pos. def., $k \geq p$
   Inverse       `dinvwish(S = S, df = k)`                 $\frac{ |x|^{-(k+p+1)/2} |S|^{k/2} \exp\{-\text{tr}(Sx^{-1})/2\}}{ 2^{pk/2} \pi^{p(p-1)/4} \prod_{i=1}{p} \Gamma((k+1-i)/2)}$
   Wishart       $S p \times p$ pos. def., $k \geq p$
-
+-->

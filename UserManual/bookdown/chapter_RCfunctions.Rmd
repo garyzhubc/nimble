@@ -24,7 +24,7 @@ can also be compiled.  Simple nimbleFunctions are useful for doing math or the o
 kinds of processing available in NIMBLE when no model or modelValues
 is needed. These can be used for any purpose in R programming.  They
 can also be used as new functions and distributions in NIMBLE's
-extension of BUGS (Chapter @ref(cha:user-defined)).
+extension of BUGS (Chapter \@ref(cha:user-defined)).
 
 
   Here's a basic example implementing the textbook calculation of
@@ -39,7 +39,7 @@ In this example, we fit a linear model for 100 random response values (`y`) to f
 randomly generated explanatory variables (`X`).  We ran the
 nimbleFunction 
 `solveLeastSquares` uncompiled,
-natively in R, allowing testing and debugging (Section @ref(sec:debugging)).  Then we compiled it and showed that the compiled version does the same thing,
+natively in R, allowing testing and debugging (Section \@ref(sec:debugging)).  Then we compiled it and showed that the compiled version does the same thing,
 but faster^[On the machine this is
   being written on, the compiled version runs a few times faster than
   the uncompiled version.  However we refrain from formal speed
@@ -62,8 +62,7 @@ To write nimbleFunctions, you will need to learn:
   * how to declare types of `nimbleFunction` arguments and return values;
   * that compiled nimbleFunctions always pass arguments to each
   other by reference.
-%  * how to use nimbleList data structures.
-
+<!---   * how to use nimbleList data structures. -->
 
 The next sections cover each of these topics in turn.
 
@@ -78,19 +77,14 @@ example, help on NIMBLE's version of `numeric` can be found by `help(nimNumeric)
 ### Basic operations
 
 Basic R operations supported for NIMBLE compilation are listed in
-Table @ref(table:functions-coreR).
+Table \@ref(table:functions-coreR).
 
-{
-\footnotesize 
-\LTcapwidth=\textwidth
-[c]{ll}
- \caption{Basic R manipulation functions in NIMBLE.  To find help in R for NIMBLE's version of a function, use the 'nim' prefix and capitalize the next letter.  E.g. `help(nimC)` for help with `c()`.} \label{table:functions-coreR} n
- \hline
-\input{coreRtableLong.tex}
 
-}
+```{r, child = 'coreRtableLong.md'}
+```
 
-Other R functions with numeric arguments and return value can be called during compiled execution by wrapping them as a `nimbleRcall` (see Section @ref(sec:calling-R-code)).
+
+Other R functions with numeric arguments and return value can be called during compiled execution by wrapping them as a `nimbleRcall` (see Section \@ref(sec:calling-R-code)).
 
 Next we cover some of these functions in more detail. 
 
@@ -122,7 +116,7 @@ returns an $n \times n$ identity matrix.  NIMBLE also provides a deprecated
 nimbleFunction `identityMatrix` that does the same thing.
 
 Examples of these functions, and the related function $`setSize`$
-for changing the size of a numeric object, are given in Section @ref(sec:chang-sizes-exist).
+for changing the size of a numeric object, are given in Section \@ref(sec:chang-sizes-exist).
 
 #### `length and \cd{dim`} {#sec:query-chang-sizes}
 
@@ -146,52 +140,25 @@ compatibility.  In a future version of NIMBLE, `declare` may be removed.
 ### Math and linear algebra {#sec:basic-math-linear}
 
 Numeric scalar and matrix mathematical operations are listed in Tables
-@ref(table:functions-dsl) and @ref(table:functions-matrix-dsl).  
+\@ref(table:functions-dsl) and \@ref(table:functions-matrix-dsl).  
 
 As in R, many scalar operations in NIMBLE will work component-wise on vectors or
-higher dimensional objects.  For example if B and C are vectors, \cd{A
-  = B + C} will add them and create vector C by component-wise
+higher dimensional objects.  For example if B and C are vectors, `A
+  = B + C` will add them and create vector C by component-wise
 addition of B and C.  In the current version of NIMBLE, component-wise operations
 generally only work for vectors and matrices, not arrays with more
 than two dimensions.  The only exception is assignment: `A = B` will
 work up to NIMBLE's current limit of four dimensions.
 
-{
-\footnotesize 
-\LTcapwidth=\textwidth
-[c]{lllcc}
- \caption{Functions operating on scalars, many of which can operate on
-   each element (component-wise) of vectors and matrices. Status
-   column indicates if the function is currently provided in
-   NIMBLE.}    \label{table:functions-dsl}n
-\hline
- Usage & Description & Comments & Status & Accepts n
-   &  &  &  & vector input  n
-  \hline \hline n
-\endhead
-\input{functionTableLong.tex}
-
-}
-
-
-{
-\footnotesize
-\LTcapwidth=\textwidth
-
-[c]{lllc}
- \caption{Functions operating on vectors and matrices. Status column
-  indicates if the function is currently provided in
-  NIMBLE.} \label{table:functions-matrix-dsl} n
-  \hline
-  Usage & Description & Comments & Status   n
-  \hline \hline n
-\endhead
-\input{functionTableMatrixLong.tex}
-\input{eigenSvdTableMatrixAsNimList.tex}
+```{r, child = 'functionTableLong.md'}
+```
+```{r, child = 'functionTableMatrixLong.md'}
+```
+!<---```{r, child = 'eigenSvdTableMatrixAsNimList.md'}
+``` -->
  
-}
 
-More information on the nimbleLists returned by the `eigen` and `svd` functions in NIMBLE can be found in Section @ref(sec:eigen-nimFunctions).
+More information on the nimbleLists returned by the `eigen` and `svd` functions in NIMBLE can be found in Section \@ref(sec:eigen-nimFunctions).
 
 
 ### Distribution functions {#sec:nimble-dist-funs}
@@ -215,7 +182,7 @@ As in R (and nimbleFunctions), arguments are matched by order or by name
 (if given). Standard arguments to distribution functions in R
 (`log`, `log.p`, `lower.tail`) can be used and have the same
 defaults. User-defined distributions for BUGS (Chapter
-@ref(cha:user-defined)) can also be used from
+\@ref(cha:user-defined)) can also be used from
 nimbleFunctions. 
 
 For standard distributions, we rely on R's regular help pages
@@ -249,7 +216,8 @@ Supported distributions, listed by their 'd' function, include:
     * `ddirch(x, alpha, log)`
     * `dmnorm_chol(x, mean, cholesky, prec_param, log)`
     * `dmvt_chol(x, mu, cholesky, df, prec_param, log)`
-    * `dwish_chol(x, cholesky, df, nscale_param, log)`
+    * `dwish_chol(x, cholesky, df, 
+scale_param, log)`
 
 
 
@@ -266,9 +234,9 @@ in R.  Decreasing index sequences are not allowed.  Unlike in R,
 `if` is not itself a function that returns a value.
 
 We plan to include more flexible `for`-loops in the future, but for
-now we've included just one additional useful feature:  \cd{for(i in
-  seq_along(NFL))} will work as in R, where `NFL` is a
-`nimbleFunctionList`.  This is described in Section @ref(sec:virt-nimbl-nimbl).
+now we've included just one additional useful feature:  `for(i in
+  seq_along(NFL))` will work as in R, where `NFL` is a
+`nimbleFunctionList`.  This is described in Section \@ref(sec:virt-nimbl-nimbl).
 
 `stop`, or equivalently `nimStop`, throws
 control to R's error-handling system and can take a character
@@ -368,7 +336,7 @@ scalars, which have 0 dimensions.
 
 A `nimbleList` is a data structure that can contain arbitrary other NIMBLE objects, including other `nimbleList`s.
 Like other NIMBLE types, nimbleLists are strongly typed: each `nimbleList` is created from a configuration that
-declares what types of objects it will hold.  `nimbleList`s are covered in Chapter @ref(sec:nimbleLists).
+declares what types of objects it will hold.  `nimbleList`s are covered in Chapter \@ref(sec:nimbleLists).
 
 ### How numeric types work {#sec:how-types-work}
 
@@ -457,7 +425,7 @@ a vector, because a vector plus a scalar returns a vector.  Another
 way to create a vector from a scalar is to use `c`, as
 illustrated in the last line.
 
-#### Confusions between vectors and one-column or one-row matrices {#sec:conf-betw-scal}
+#### Confusions between vectors and one-column or one-row matrices {#sec:conf-betw-scal2}
 
 Consider the following code:
 ```{r, }
@@ -532,10 +500,10 @@ product of `v1` and `v2`.  If you want the inner product as a scalar, use
   it must already be correctly sized for the result.  For example,
   `Y[5:10, 20:30] <- x` will not work -- and could crash
   your R session with a segmentation fault --  if Y is not
-  already at least 10x30 in size.  This can be done by \cd{setSize(Y,
-    c(10, 30))}.  See Section @ref(sec:chang-sizes-exist) for more
-  details.  Note that non-indexed assignment to `Y`, such as \cd{Y
-    <- x}, will automatically set `Y` to the necessary size. 
+  already at least 10x30 in size.  This can be done by `setSize(Y,
+    c(10, 30))`.  See Section \@ref(sec:chang-sizes-exist) for more
+  details.  Note that non-indexed assignment to `Y`, such as `Y
+    <- x`, will automatically set `Y` to the necessary size. 
   
 
 
@@ -559,13 +527,13 @@ For matrix algebra, NIMBLE cannot ensure perfect behavior because
 sizes are not known until run time.  Therefore, it is possible for you
 to write code that will crash your R session.  In Version `r version`, NIMBLE
 attempts to issue a warning if sizes are not compatible, but it does not
-halt execution.  Therefore, if you execute \cd{A <- M1 \% * \%
-  M2}, and `M1` and `M2` are not compatible for matrix multiplication,
+halt execution.  Therefore, if you execute `A <- M1 \% * \%
+  M2`, and `M1` and `M2` are not compatible for matrix multiplication,
 NIMBLE will output a warning that the number of rows of `M1` does not
 match the number of columns of `M2`.  After that warning the statement
 will be executed and may result in a crash.  Another easy way to write
-code that will crash is to do things like \cd{Y[5:10, 20:30] <-
-  x} without ensuring Y is at least 10x30.  In the future we hope to
+code that will crash is to do things like `Y[5:10, 20:30] <-
+  x` without ensuring Y is at least 10x30.  In the future we hope to
 prevent crashes, but in Version `r version`\ we limit ourselves to trying to provide
 useful information.
 
@@ -574,21 +542,21 @@ useful information.
 NIMBLE requires that types of arguments and the type of the return value be
 explicitly declared.
 
-As illustrated in the example in Section @ref(sec:RC-intro),  the
+As illustrated in the example in Section \@ref(sec:RC-intro),  the
 syntax for a type declaration is:
 
  `type(nDim, sizes)`
  
 where `type` is `double`, `integer`, `logical` or `character`. 
 (In more general nimbleFunction programming, a type can also be a
-nimbleList type, discussed in Section @ref(sec:nimbleLists).)
+nimbleList type, discussed in Section \@ref(sec:nimbleLists).)
 
 For example `run = function(x = double(1)) { ... `} sets the single argument of the run function to be a vector of numeric values of unknown size.
 
 For `type(nDim, sizes)`, `nDim` is the number of dimensions, with 0 indicating scalar and omission of `nDim` defaulting to a scalar.
 `sizes` is an optional vector of fixed, known sizes.  
- For example, \cd{double(2,
-  c(4, 5))} declares a `4-$\times$-5` matrix.  If sizes
+ For example, `double(2,
+  c(4, 5))` declares a `4-$\times$-5` matrix.  If sizes
 are omitted, they will be set either by assignment or by `setSize`.
 
 In the case of scalar arguments only, a default value can be
