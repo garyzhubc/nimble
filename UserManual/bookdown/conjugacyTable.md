@@ -1,10 +1,9 @@
-Conjugate relationships supported by NIMBLE’s MCMC engine.
-label="table:conjugaciesSupported"
+Table: (#tab:conjugacy) Conjugate relationships supported by NIMBLE’s MCMC engine.
 
   Prior Distribution  Sampling (Dependent Node) Distribution  Parameter
   ------------------  --------------------------------------  -----------
   Beta                Bernoulli                               prob
-	                    Binomial                                prob
+	              Binomial                                prob
                       Negative Binomial                       prob
   Dirichlet           Multinomial                             prob
                       Categorical                             prob
