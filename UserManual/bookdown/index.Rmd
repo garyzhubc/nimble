@@ -29,3 +29,14 @@ runMCEMs <- FALSE
 #version="0.6-11"
 ```
 
+```{r echo=FALSE, include=FALSE, eval=FALSE}
+## for creating combined tables for functions in Writing Models and NF programming
+system("cat functionTableLong.md eigenTableMatrix.md > tmp.md")
+```
+```{r, child = 'tmp.md, eval=FALSE'}
+```
+```{r echo=FALSE, include=FALSE, eval=FALSE}
+system("rm -rf tmp.md")
+```
+
+

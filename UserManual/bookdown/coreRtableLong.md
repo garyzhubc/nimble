@@ -1,4 +1,4 @@
-Basic R manipulation functions in NIMBLE. To find help in R for NIMBLE's version of a function, use the "nim" prefix and capitalize the next
+Table: (#tab:coreR) Basic R manipulation functions in NIMBLE. To find help in R for NIMBLE's version of a function, use the "nim" prefix and capitalize the next
 letter. E.g. `help(nimC)` for help with `c()`.
 
   Function        Comments (differences from R)

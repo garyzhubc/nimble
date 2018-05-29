@@ -22,10 +22,3 @@ provided in NIMBLE.
   `pmin(x, y), pmax(x,y)` vector of mins (maxs) of elements of                                        ok
                           `x` and `y`
   `interp.lin(x, v1, v2)` linear interpolation                                                        not avail.
-  `eigen(x)$values`       matrix eigenvalues                         $x$ symmetric                    ok
-  `eigen(x)$vectors`      matrix eigenvectors                        $x$ symmetric                    ok
-  `svd(x)$d`              matrix singular values                                                      ok
-  `svd(x)$u`              matrix left singular vectors                                                ok
-  `svd(x)$v`              matrix right singular vectors                                               ok
-
-
